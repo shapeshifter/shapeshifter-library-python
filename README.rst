@@ -34,3 +34,19 @@ Features of this package:
 - JSON-serializable dataclasses for easy transport to other systems
 - Fully internal queing system for full-duplex communication with minimal user code required
 
+
+Version History
+---------------
+
++-------------+-------------------+----------------------------------+
+| Version     | Release Date      | Release Notes                    |
++=============+===================+==================================+
+| 1.0.1       | 2023-08-23        | Fixes the following two issues:  |
+|             |                   |                                  |
+|             |                   | - Outgoing signed messages would |
+|             |                   |   be twice-encoded into base64   |
+|             |                   | - Support for empty response     |
+|             |                   |   messages                       |
++-------------+-------------------+----------------------------------+
+| 1.0.0       | 2023-07-20        | Initial release version          |
++-------------+-------------------+----------------------------------+

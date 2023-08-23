@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name="shapeshifter-uftp",
-    version="1.0.0",
+    version="1.0.1",
     python_requires=">=3.10",
     description="Allows connections between DSO, AGR and CRO using the Shapeshifter (UFTP) protocol.",
     packages=[
