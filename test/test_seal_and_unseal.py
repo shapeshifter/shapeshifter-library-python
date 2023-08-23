@@ -47,7 +47,7 @@ def test_tampered_message():
 
 def test_invalid_message():
     msg = '<?xml version="1.0" encoding="UTF-8"?><Hello />'.encode()
-    sealed = b64encode(crypto_sign(msg, private))
+    sealed = crypto_sign(msg, private)
     with pytest.raises(SchemaException):
         unsealed = unseal_message(sealed, public_base64)
 

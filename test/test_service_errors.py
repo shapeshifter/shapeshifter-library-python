@@ -62,7 +62,7 @@ def test_transport_error():
             signed_message = SignedMessage(
                 sender_domain=agr_service.sender_domain,
                 sender_role=agr_service.sender_role,
-                body=b64encode(sealed_message)
+                body=sealed_message
             )
             response = requests.post(
                 client.recipient_endpoint,

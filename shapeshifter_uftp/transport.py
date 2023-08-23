@@ -49,7 +49,7 @@ def seal_message(message: PayloadMessage, private_key: str) -> bytes:
     serialized_message = to_xml(message)
     logger.debug(f"Signing outgoing message {serialized_message}")
     sealed_message = crypto_sign(serialized_message.encode("utf-8"), b64decode(private_key))
-    return b64encode(sealed_message)
+    return sealed_message
 
 
 def unseal_message(message: bytes, public_key: str) -> PayloadMessage:
@@ -61,12 +61,7 @@ def unseal_message(message: bytes, public_key: str) -> PayloadMessage:
     The message will be returned as a PayloadMessage object.
     """
     try:
-        decoded_message = b64decode(message)
-    except BinAsciiError as exc:
-        raise SchemaException(exc) from exc
-
-    try:
-        unsealed_message = crypto_sign_open(decoded_message, b64decode(public_key))
+        unsealed_message = crypto_sign_open(message, b64decode(public_key))
         logger.debug(f"Incoming Message: {unsealed_message.decode()}")
         return from_xml(unsealed_message)
     except BadSignatureError as exc:
