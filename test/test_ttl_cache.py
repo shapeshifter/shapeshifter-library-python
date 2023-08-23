@@ -34,7 +34,9 @@ def test_ttl_cache_with_kwargs():
     result_1 = dummy_function("hello", key="one")
     time.sleep(0.05)
     result_2 = dummy_function("hello", key="one")
+    time.sleep(0.02)
     result_3 = dummy_function("hello", key="two")
+    time.sleep(0.02)
     result_4 = dummy_function("world", key="one")
 
     assert result_1 == result_2
