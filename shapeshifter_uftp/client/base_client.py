@@ -71,7 +71,7 @@ class ShapeshifterClient():
         it up into a SignedMessage, sign and seal it, and send it to
         the recipient. It returns an unsealed PayloadMessageResponse
         that contains the functional status of the request. The
-        actual response always arries asynchronously on your service
+        actual response always arrives asynchronously on your service
         (which runs separately).
         """
         if not isinstance(message, PayloadMessage):
@@ -124,6 +124,10 @@ class ShapeshifterClient():
             )
             logger.error(error_msg)
             raise ClientTransportException(error_msg)
+
+        # If the response was empty, don't attempt to parse it
+        if len(response.content) == 0:
+            return None
 
         # Instantiate a SignedMessage object from the response bytes.
         sealed_response = transport.parser.from_bytes(response.content)
