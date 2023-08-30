@@ -367,6 +367,15 @@ class DPrognosisResponse(PayloadMessageResponse):
     class Meta:
         name = "D-PrognosisResponse"
 
+    d_prognosis_message_id: str = field(
+        metadata={
+            "name": "D-PrognosisMessageID",
+            "type": "Attribute",
+            "required": True,
+            "pattern": r"[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}",
+        }
+    )
+
     flex_order_statuses: List[FlexOrderStatus] = field(
         default_factory=list,
         metadata={
@@ -485,12 +494,26 @@ class FlexOfferOption:
 
 @dataclass(kw_only=True)
 class FlexOfferResponse(PayloadMessageResponse):
-    pass
+    flex_offer_message_id: str = field(
+        metadata={
+            "name": "FlexOfferMessageID",
+            "type": "Attribute",
+            "required": True,
+            "pattern": r"[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}",
+        }
+    )
 
 
 @dataclass(kw_only=True)
 class FlexOfferRevocationResponse(PayloadMessageResponse):
-    pass
+    flex_offer_revocation_message_id: str = field(
+        metadata={
+            "name": "FlexOfferRevocationMessageID",
+            "type": "Attribute",
+            "required": True,
+            "pattern": r"[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}",
+        }
+    )
 
 
 @dataclass(kw_only=True)
@@ -512,7 +535,14 @@ class FlexOfferRevocation(PayloadMessage):
 
 @dataclass(kw_only=True)
 class FlexOrderResponse(PayloadMessageResponse):
-    pass
+    flex_order_message_id: str = field(
+        metadata={
+            "name": "FlexOrderMessageID",
+            "type": "Attribute",
+            "required": True,
+            "pattern": r"[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}",
+        }
+    )
 
 
 @dataclass(kw_only=True)
@@ -714,12 +744,28 @@ class FlexRequestISP:
 
 @dataclass(kw_only=True)
 class FlexRequestResponse(PayloadMessageResponse):
-    pass
+
+    flex_request_message_id: str = field(
+        metadata={
+            "name": "FlexRequestMessageID",
+            "type": "Attribute",
+            "required": True,
+            "pattern": r"[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}",
+        }
+    )
 
 
 @dataclass(kw_only=True)
 class FlexReservationUpdateResponse(PayloadMessageResponse):
-    pass
+
+    flex_reservation_update_message_id: str = field(
+        metadata={
+            "name": "FlexReservationUpdateMessageID",
+            "type": "Attribute",
+            "required": True,
+            "pattern": r"[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}",
+        }
+    )
 
 
 @dataclass(kw_only=True)
@@ -1072,6 +1118,15 @@ class FlexReservationUpdate(FlexMessage):
 
 @dataclass(kw_only=True)
 class FlexSettlementResponse(PayloadMessageResponse):
+    flex_settlement_message_id: str = field(
+        metadata={
+            "name": "FlexSettlementMessageID",
+            "type": "Attribute",
+            "required": True,
+            "pattern": r"[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}",
+        }
+    )
+
     flex_order_settlement_statuses: List[FlexOrderSettlementStatus] = field(
         default_factory=list,
         metadata={
@@ -1091,7 +1146,7 @@ class FlexSettlementResponse(PayloadMessageResponse):
 
 
 @dataclass(kw_only=True)
-class FlexSettlement(PayloadMessage):
+class FlexSettlement(PayloadMessageResponse):
     """
     :ivar flex_order_settlement:
     :ivar contract_settlement:

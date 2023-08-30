@@ -125,15 +125,6 @@ class PayloadMessageResponse(PayloadMessage):
         must contain a human-readable description of the failure reason.
     """
 
-    reference_message_id: Optional[str] = field(
-        default=None,
-        metadata={
-            "name": "ReferenceMessageID",
-            "type": "Attribute",
-            "required": True,
-            "pattern": r"[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}",
-        }
-    )
     result: Optional[AcceptedRejected] = field(
         default=AcceptedRejected.ACCEPTED,
         metadata={

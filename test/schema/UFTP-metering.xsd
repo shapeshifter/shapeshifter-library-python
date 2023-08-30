@@ -1,11 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<!--
-SPDX-FileCopyrightText: 2020-2023 Contributors to the Shapeshifter project
-
-SPDX-License-Identifier: Apache-2.0
--->
-
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
 
     <xs:include schemaLocation="UFTP-common.xsd"/>
@@ -149,7 +142,13 @@ SPDX-License-Identifier: Apache-2.0
     <!-- -->
     <xs:complexType name="MeteringResponseType">
         <xs:complexContent>
-            <xs:extension base="PayloadMessageResponseType"/>
+            <xs:extension base="PayloadMessageResponseType">
+                <xs:attribute name="MeteringMessageID" type="UUIDType" use="required">
+                    <xs:annotation>
+                        <xs:documentation>MessageID of the Metering message this response is based on.</xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+            </xs:extension>
         </xs:complexContent>
     </xs:complexType>
     <!-- ELEMENT DEFINITIONS -->

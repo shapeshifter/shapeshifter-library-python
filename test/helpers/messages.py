@@ -38,7 +38,7 @@ messages = [
             )
         ],
         period=XmlDate(2023, 1, 1),
-        reference_message_id=str(uuid4()),
+        agr_portfolio_query_message_id=str(uuid4()),
         **default_args
     ),
     AgrPortfolioUpdate(
@@ -50,7 +50,7 @@ messages = [
         ],
         **default_args
     ),
-    AgrPortfolioUpdateResponse(reference_message_id=str(uuid4()), **default_args),
+    AgrPortfolioUpdateResponse(agr_portfolio_update_message_id=str(uuid4()), **default_args),
     DPrognosis(
         isp_duration="PT15M",
         period=XmlDate(2023, 1, 1),
@@ -66,7 +66,7 @@ messages = [
         **default_args
     ),
     DPrognosisResponse(
-        reference_message_id=str(uuid4()),
+        d_prognosis_message_id=str(uuid4()),
         **default_args,
     ),
     DsoPortfolioQuery(
@@ -83,7 +83,7 @@ messages = [
             entity_address="ean.123456789012"
         ),
         period=XmlDate(2023, 5, 1),
-        reference_message_id=str(uuid4()),
+        dso_portfolio_query_message_id=str(uuid4()),
         **default_args,
     ),
     DsoPortfolioUpdate(
@@ -107,7 +107,7 @@ messages = [
         **default_args
     ),
     DsoPortfolioUpdateResponse(
-        reference_message_id=str(uuid4()), **default_args
+        dso_portfolio_update_message_id=str(uuid4()), **default_args
     ),
     FlexOffer(
         isp_duration="PT15M",
@@ -130,9 +130,9 @@ messages = [
         ],
         **default_args
     ),
-    FlexOfferResponse(reference_message_id=str(uuid4()), **default_args),
+    FlexOfferResponse(flex_offer_message_id=str(uuid4()), **default_args),
     FlexOfferRevocation(flex_offer_message_id=str(uuid4()), **default_args),
-    FlexOfferRevocationResponse(reference_message_id=str(uuid4()), **default_args),
+    FlexOfferRevocationResponse(flex_offer_revocation_message_id=str(uuid4()), **default_args),
     FlexOrder(
         isps=[FlexOrderISP(
             power=1,
@@ -154,7 +154,7 @@ messages = [
         **default_args
     ),
     FlexOrderResponse(
-        reference_message_id=str(uuid4()),
+        flex_order_message_id=str(uuid4()),
         **default_args
     ),
     FlexRequest(
@@ -192,7 +192,7 @@ messages = [
         **default_args,
     ),
     FlexReservationUpdateResponse(
-        reference_message_id=str(uuid4()),
+        flex_reservation_update_message_id=str(uuid4()),
         **default_args
     ),
     FlexSettlement(
@@ -254,11 +254,11 @@ messages = [
                 dispute_reason="My Reason",
             )
         ],
-        reference_message_id=str(uuid4()),
+        flex_settlement_message_id=str(uuid4()),
         **default_args,
     ),
     FlexRequestResponse(
-        reference_message_id=str(uuid4()),
+        flex_request_message_id=str(uuid4()),
         **default_args,
     ),
     Metering(
@@ -283,7 +283,7 @@ messages = [
         **default_args
     ),
     MeteringResponse(
-        reference_message_id=str(uuid4()),
+        metering_message_id=str(uuid4()),
         **default_args
     ),
 

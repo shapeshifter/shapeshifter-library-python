@@ -187,7 +187,6 @@ class ShapeshifterService():
 
         except FunctionalException as err:
             response = PayloadMessageResponse(
-                reference_message_id = unsealed_message.message_id,
                 result = AcceptedRejected.REJECTED,
                 rejection_reason = err.rejection_reason
             )

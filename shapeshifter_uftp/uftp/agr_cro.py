@@ -168,6 +168,15 @@ class AgrPortfolioUpdateResponse(PayloadMessageResponse):
     class Meta:
         name = "AGRPortfolioUpdateResponse"
 
+    agr_portfolio_update_message_id: str = field(
+        metadata={
+            "name": "AGRPortfolioUpdateMessageID",
+            "type": "Attribute",
+            "required": True,
+            "pattern": r"[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}",
+        }
+    )
+
 
 @dataclass(kw_only=True)
 class AgrPortfolioUpdate(PayloadMessage):
@@ -272,6 +281,15 @@ class AgrPortfolioQueryResponse(PayloadMessageResponse):
     """
     class Meta:
         name = "AGRPortfolioQueryResponse"
+
+    agr_portfolio_query_message_id: str = field(
+        metadata={
+            "name": "AGRPortfolioQueryMessageID",
+            "type": "Attribute",
+            "required": True,
+            "pattern": r"[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}",
+        }
+    )
 
     dso_views: List[AgrPortfolioQueryResponseDSOView] = field(
         default_factory=list,

@@ -1,11 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<!--
-SPDX-FileCopyrightText: 2020-2023 Contributors to the Shapeshifter project
-
-SPDX-License-Identifier: Apache-2.0
--->
-
 <!-- edited with XMLSpy v2020 sp1 (x64) (http://www.altova.com) by Erik Brouwer (ICT netherlands B.V.) -->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
     <xs:include schemaLocation="UFTP-common.xsd"/>
@@ -96,6 +89,11 @@ SPDX-License-Identifier: Apache-2.0
                 <xs:sequence>
                     <xs:element name="FlexOrderStatus" type="FlexOrderStatusType" minOccurs="0" maxOccurs="unbounded"/>
                 </xs:sequence>
+                <xs:attribute name="D-PrognosisMessageID" type="UUIDType" use="required">
+                    <xs:annotation>
+                        <xs:documentation>MessageID of the D-Prognosis message this request is based on.</xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
             </xs:extension>
         </xs:complexContent>
     </xs:complexType>
@@ -149,7 +147,13 @@ SPDX-License-Identifier: Apache-2.0
     <!-- -->
     <xs:complexType name="FlexReservationUpdateResponseType">
         <xs:complexContent>
-            <xs:extension base="PayloadMessageResponseType"/>
+            <xs:extension base="PayloadMessageResponseType">
+                <xs:attribute name="FlexReservationUpdateMessageID" type="UUIDType" use="required">
+                    <xs:annotation>
+                        <xs:documentation>MessageID of the FlexReservationUpdate message this request is based on.</xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+            </xs:extension>
         </xs:complexContent>
     </xs:complexType>
     <!-- -->
@@ -170,7 +174,7 @@ SPDX-License-Identifier: Apache-2.0
                             FlexRequest message is sent.</xs:documentation>
                     </xs:annotation>
                 </xs:attribute>
-                <xs:attribute name="ExpirationDateTime" type="DateTimeType" use="required">
+                <xs:attribute name="ExpirationDateTime" type="xs:dateTime" use="required">
                     <xs:annotation>
                         <xs:documentation>Date and time, including the time zone (ISO 8601 formatted as per http://www.w3.org/TR/NOTE-datetime) until which the FlexRequest message is valid.</xs:documentation>
                     </xs:annotation>
@@ -219,7 +223,13 @@ SPDX-License-Identifier: Apache-2.0
     <!-- -->
     <xs:complexType name="FlexRequestResponseType">
         <xs:complexContent>
-            <xs:extension base="PayloadMessageResponseType"/>
+            <xs:extension base="PayloadMessageResponseType">
+                <xs:attribute name="FlexRequestMessageID" type="UUIDType" use="required">
+                    <xs:annotation>
+                        <xs:documentation>MessageID of the FlexRequest message this request is based on.</xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+            </xs:extension>
         </xs:complexContent>
     </xs:complexType>
     <!-- -->
@@ -234,7 +244,7 @@ SPDX-License-Identifier: Apache-2.0
                     </xs:annotation>
                     <xs:element name="OfferOption" type="FlexOfferOptionType" minOccurs="1" maxOccurs="unbounded"/>
                 </xs:sequence>
-                <xs:attribute name="ExpirationDateTime" type="DateTimeType" use="required">
+                <xs:attribute name="ExpirationDateTime" type="xs:dateTime" use="required">
                     <xs:annotation>
                         <xs:documentation>Date and time, including the time zone (ISO 8601 formatted as per http://www.w3.org/TR/NOTE-datetime) until which the FlexOffer is valid.</xs:documentation>
                     </xs:annotation>
@@ -318,7 +328,13 @@ SPDX-License-Identifier: Apache-2.0
    -->
     <xs:complexType name="FlexOfferResponseType">
         <xs:complexContent>
-            <xs:extension base="PayloadMessageResponseType"/>
+            <xs:extension base="PayloadMessageResponseType">
+                <xs:attribute name="FlexOfferMessageID" type="UUIDType" use="required">
+                    <xs:annotation>
+                        <xs:documentation>MessageID of the FlexOffer message this request is based on.</xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+            </xs:extension>
         </xs:complexContent>
     </xs:complexType>
     <!--
@@ -340,7 +356,13 @@ SPDX-License-Identifier: Apache-2.0
    -->
     <xs:complexType name="FlexOfferRevocationResponseType">
         <xs:complexContent>
-            <xs:extension base="PayloadMessageResponseType"/>
+            <xs:extension base="PayloadMessageResponseType">
+                <xs:attribute name="FlexOfferRevocationMessageID" type="UUIDType" use="required">
+                    <xs:annotation>
+                        <xs:documentation>MessageID of the FlexOfferRevocation message this request is based on.</xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+            </xs:extension>
         </xs:complexContent>
     </xs:complexType>
     <!--
@@ -424,13 +446,19 @@ SPDX-License-Identifier: Apache-2.0
     <!--  Flex Order Response Type  -->
     <xs:complexType name="FlexOrderResponseType">
         <xs:complexContent>
-            <xs:extension base="PayloadMessageResponseType"/>
+            <xs:extension base="PayloadMessageResponseType">
+                <xs:attribute name="FlexOrderMessageID" type="UUIDType" use="required">
+                    <xs:annotation>
+                        <xs:documentation>MessageID of the FlexOrder that has just been accepted or rejected.</xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+            </xs:extension>
         </xs:complexContent>
     </xs:complexType>
     <!-- Flex Settlement Type -->
     <xs:complexType name="FlexSettlementType">
         <xs:complexContent>
-            <xs:extension base="PayloadMessageType">
+            <xs:extension base="PayloadMessageResponseType">
                 <xs:sequence>
                     <xs:element name="FlexOrderSettlement" type="FlexOrderSettlementType" maxOccurs="unbounded"/>
                     <xs:element name="ContractSettlement" type="ContractSettlementType" maxOccurs="unbounded"/>
@@ -553,6 +581,11 @@ SPDX-License-Identifier: Apache-2.0
                     </xs:annotation>
                     <xs:element name="FlexOrderSettlementStatus" type="FlexOrderSettlementStatusType" maxOccurs="unbounded"/>
                 </xs:sequence>
+                <xs:attribute name="FlexSettlementMessageID" type="UUIDType" use="required">
+                    <xs:annotation>
+                        <xs:documentation>MessageID of the FlexSettlement message that has just been accepted or rejected</xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
             </xs:extension>
         </xs:complexContent>
     </xs:complexType>
@@ -625,7 +658,7 @@ SPDX-License-Identifier: Apache-2.0
         </xs:attribute>
         <xs:attribute name="AvailablePower" type="xs:integer" use="optional">
             <xs:annotation>
-                <xs:documentation>Amount of flex power that is considered available based on the FlexRequest in question. In case RequestedPower=0, AvailablePower is defined so that the offered power is allowed to be between 0 and AvailablePower in terms of compliancy (see Appendix 'Rationale for information exchange in flexibility request' for details). In case RequestedPower ≠0, AvailablePower is defined so that the offered power is allowed to exceed the amount of requested power up to AvailablePower. If this is relevant for settlement, the DSO can include this field.</xs:documentation>
+                <xs:documentation>Amount of flex power that is considered available based on the FlexRequest in question. In case RequestedPower=0, AvailablePower is defined so that the offered power is allowed to be between 0 and AvailablePower in terms of compliancy (see Appendix 3 for details). In case RequestedPower ≠0, AvailablePower is defined so that the offered power is allowed to exceed the amount of requested power up to AvailablePower. If this is relevant for settlement, the DSO can include this field.</xs:documentation>
             </xs:annotation>
         </xs:attribute>
         <xs:attribute name="OfferedPower" type="xs:integer" use="optional">

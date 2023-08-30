@@ -238,6 +238,15 @@ class DsoPortfolioUpdateResponse(PayloadMessageResponse):
     class Meta:
         name = "DSOPortfolioUpdateResponse"
 
+    dso_portfolio_update_message_id: str = field(
+        metadata={
+            "name": "DSOPortfolioUpdateResponseMessageID",
+            "type": "Attribute",
+            "required": True,
+            "pattern": r"[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}",
+        }
+    )
+
 
 @dataclass(kw_only=True)
 class DsoPortfolioQueryResponse(PayloadMessageResponse):
@@ -255,6 +264,15 @@ class DsoPortfolioQueryResponse(PayloadMessageResponse):
     """
     class Meta:
         name = "DSOPortfolioQueryResponse"
+
+    dso_portfolio_query_message_id: str = field(
+        metadata={
+            "name": "DSOPortfolioQueryMessageID",
+            "type": "Attribute",
+            "required": True,
+            "pattern": r"[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}",
+        }
+    )
 
     congestion_point: Optional[DsoPortfolioQueryCongestionPoint] = field(
         default=None,

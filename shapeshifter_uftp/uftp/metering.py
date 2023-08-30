@@ -108,7 +108,14 @@ class MeteringProfile:
 
 @dataclass(kw_only=True)
 class MeteringResponse(PayloadMessageResponse):
-    pass
+    metering_message_id: str = field(
+        metadata={
+            "name": "MeteringMessageID",
+            "type": "Attribute",
+            "required": True,
+            "pattern": r"[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}",
+        }
+    )
 
 
 @dataclass(kw_only=True)

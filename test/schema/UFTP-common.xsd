@@ -1,11 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<!--
-SPDX-FileCopyrightText: 2020-2023 Contributors to the Shapeshifter project
-
-SPDX-License-Identifier: Apache-2.0
--->
-
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
     <!-- -->
     <!-- ShapeShifter Specification Version -->
@@ -62,14 +55,6 @@ SPDX-License-Identifier: Apache-2.0
     <xs:simpleType name="TimeZoneNameType">
         <xs:restriction base="xs:string">
             <xs:pattern value="(Africa|America|Australia|Europe|Pacific)/[a-zA-Z0-9_/]{3,}"/>
-        </xs:restriction>
-    </xs:simpleType>
-    <!-- -->
-    <!-- DateTime Type -->
-    <!-- -->
-    <xs:simpleType name="DateTimeType">
-        <xs:restriction base="xs:dateTime">
-            <xs:pattern value="\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d{0,9})?([+-]\d{2}:\d{2}|Z)"/>
         </xs:restriction>
     </xs:simpleType>
     <!-- -->
@@ -184,7 +169,7 @@ SPDX-License-Identifier: Apache-2.0
                 <xs:documentation>Internet domain of the participant this message is intended for. When sending a message, this attribute, combined with the RecipientRole, is used to look up the USEF endpoint the message should be delivered to.</xs:documentation>
             </xs:annotation>
         </xs:attribute>
-        <xs:attribute name="TimeStamp" type="DateTimeType" use="required">
+        <xs:attribute name="TimeStamp" type="xs:dateTime" use="required">
             <xs:annotation>
                 <xs:documentation>Date and time this message was created, including the time zone (ISO 8601 formatted as per http://www.w3.org/TR/NOTE-datetime).</xs:documentation>
             </xs:annotation>
@@ -206,11 +191,6 @@ SPDX-License-Identifier: Apache-2.0
     <xs:complexType name="PayloadMessageResponseType" abstract="true">
         <xs:complexContent>
             <xs:extension base="PayloadMessageType">
-                <xs:attribute name="ReferenceMessageID" type="UUIDType" use="required">
-                    <xs:annotation>
-                        <xs:documentation>MessageID of the message that has just been accepted or rejected.</xs:documentation>
-                    </xs:annotation>
-                </xs:attribute>
                 <xs:attribute name="Result" type="AcceptedRejectedType" use="required">
                     <xs:annotation>
                         <xs:documentation>Indication whether the query was executed successfully or failed.</xs:documentation>
@@ -237,7 +217,7 @@ SPDX-License-Identifier: Apache-2.0
     <!-- -->
     <xs:complexType name="TestMessageResponseType">
         <xs:complexContent>
-            <xs:extension base="PayloadMessageResponseType"/>
+            <xs:extension base="PayloadMessageType"/>
         </xs:complexContent>
     </xs:complexType>
     <!-- -->
