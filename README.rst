@@ -33,7 +33,7 @@ Features of this package:
 - Convenient services for each role
 - JSON-serializable dataclasses for easy transport to other systems
 - Fully internal queing system for full-duplex communication with minimal user code required
-
+- Compatible with the 3.0.0 version of the Shapeshifter protocol.
 
 Version History
 ---------------
@@ -41,6 +41,10 @@ Version History
 +-------------+-------------------+----------------------------------+
 | Version     | Release Date      | Release Notes                    |
 +=============+===================+==================================+
+| 1.1.0       | 2023-08-30        | Use the published 3.0.0 spec     |
+|             |                   | for the XSD validation and       |
+|             |                   | objects.                         |
++-------------+-------------------+----------------------------------+
 | 1.0.1       | 2023-08-23        | Fixes the following two issues:  |
 |             |                   |                                  |
 |             |                   | - Outgoing signed messages would |
