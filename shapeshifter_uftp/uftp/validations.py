@@ -23,6 +23,10 @@ def validate_list(name, value, item_type, length):
         raise TypeError(f"'{name}' must be a list, not {type(value)}")
     if len(value) < length:
         raise ValueError(f"'Length of list '{name}' must be {length} or greater, not {len(value)}")
-    if not all(isinstance(item, item_type) for item in value):
-        raise TypeError(f"'Not all items in list were of type {item_type}")
+    for index, item in enumerate(value):
+        if not isinstance(item, item_type):
+            raise TypeError(
+                f"Not all items of property {name} were of type {item_type}: "
+                f"item at index {index} was of type {type(item)}"
+            )
     return value
