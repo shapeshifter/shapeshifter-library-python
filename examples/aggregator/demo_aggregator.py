@@ -28,6 +28,26 @@ class DemoAggregator(ShapeshifterAgrService):
     def process_flex_request(self, message):
         print(f"Received a message: {message}")
 
+        # Example of how to send a new message after
+        # processing an incoming message.
+        dso_client = self.dso_client(message.sender_domain)
+        dso_client.send_flex_offer(
+            FlexOffer(
+                isp_duration="PT15M",
+                period=XmlDate(2023, 1, 1),
+                congestion_point="ean.123456789012",
+                expiration_date_time=datetime.now(timezone.utc).isoformat(),
+                offer_options=[
+                    FlexOfferOption(
+                        isps=[FlexOfferOptionISP(power=1, start=1, duration=1)],
+                        option_reference="MyOption",
+                        price=2.30,
+                        min_activation_factor=0.5,
+                    )
+                ],
+            )
+        )
+
     def process_flex_reservation_update(self, message):
         print(f"Received a message: {message}")
 
@@ -104,5 +124,6 @@ if __name__ == "__main__":
             input("Press return to send a FlexOffer message to the DSO")
             response = dso_client.send_flex_offer(flex_offer_message)
             print(f"Response was: {response}")
-        finally:
+        except:
             aggregator.stop()
+            break

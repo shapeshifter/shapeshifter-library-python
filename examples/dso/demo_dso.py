@@ -2,8 +2,8 @@ from datetime import datetime, timezone
 from uuid import uuid4
 
 from shapeshifter_uftp import ShapeshifterDsoService
-from shapeshifter_uftp.uftp import (AvailableRequested, FlexRequest,
-                                    FlexRequestISP)
+from shapeshifter_uftp.uftp import (AvailableRequested, FlexOrder,
+                                    FlexOrderISP, FlexRequest, FlexRequestISP)
 from xsdata.models.datatype import XmlDate
 
 
@@ -19,6 +19,31 @@ class DemoDSO(ShapeshifterDsoService):
 
     def process_flex_offer(self, message):
         print(f"Received a message: {message}")
+
+        # Example of how to send a new message after
+        # processing an incoming message
+        agr_client = self.agr_client(message.sender_domain)
+        agr_client.send_flex_order(
+            FlexOrder(
+                isp_duration=message.isp_duration,
+                time_zone=message.time_zone,
+                period=message.period,
+                congestion_point=message.congestion_point,
+                flex_offer_message_id=message.message_id,
+                isps=[
+                    FlexOrderISP(
+                        power=isp.power,
+                        start=isp.start,
+                        duration=isp.duration,
+                    )
+                    for isp in message.offer_options[0].isps
+                ],
+                price=message.offer_options[0].price,
+                currency="EUR",
+                order_reference="demo-order",
+                activation_factor=1.0
+            )
+        )
 
     def process_flex_offer_revocation(self, message):
         print(f"Received a message: {message}")
@@ -108,5 +133,6 @@ if __name__ == "__main__":
             input("Press return to send a FlexRequest message to the AGR")
             response = agr_client.send_flex_request(flex_request_message)
             print(f"Response was: {response}")
-        finally:
+        except:
             dso.stop()
+            break
