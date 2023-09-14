@@ -74,19 +74,6 @@ def endpoint_lookup(sender_domain, sender_role):
     return known_senders.get((sender_domain, sender_role))
 
 
-# Aggregator keys:
-# private: mz5XYCNKxpx48K+9oipUhsjBZed3L7rTVKLsWmG1HOqRLIeuGpIa1KAt6AlbVGqJvewd8v1J0uVUTqpGt7F8tw==
-# public: kSyHrhqSGtSgLegJW1Rqib3sHfL9SdLlVE6qRrexfLc=
-
-# DSO Keys:
-# Private key (base64): OLgpAnYyZmskhCKGmFAj1tysKgGjwehK0msC6NoAg9g2xNur+IAFTq1uyOuIGD9nl1J9Cy26UPQakwjZ8sNZ5w==
-# Public key (base64):  NsTbq/iABU6tbsjriBg/Z5dSfQstulD0GpMI2fLDWec=
-
-
-# CRO Keys:
-# Private key (base64): yEZ38dlslmCzv8qxDerngNIbiqmeoQOn8nYnjD4fVenJJRhTzu6wStEUoYlp/C9UMsaGcFUkII1h9C+bC/w5sw==
-# Public key (base64):  ySUYU87usErRFKGJafwvVDLGhnBVJCCNYfQvmwv8ObM=
-
 if __name__ == "__main__":
     aggregator = DemoAggregator(
         sender_domain="aggregator.demo",
