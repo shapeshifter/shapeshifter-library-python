@@ -41,6 +41,10 @@ Version History
 +-------------+-------------------+----------------------------------+
 | Version     | Release Date      | Release Notes                    |
 +=============+===================+==================================+
+| 1.1.2       | 2024-03-12        | Pinned dependencies after a      |
+|             |                   | breaking update to fastapi-xml   |
+|             |                   | was released.                    |
++-------------+-------------------+----------------------------------+
 | 1.1.0       | 2023-08-30        | Use the published 3.0.0 spec     |
 |             |                   | for the XSD validation and       |
 |             |                   | objects.                         |
