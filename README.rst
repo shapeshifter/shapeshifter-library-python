@@ -41,6 +41,9 @@ Version History
 +-------------+-------------------+----------------------------------+
 | Version     | Release Date      | Release Notes                    |
 +=============+===================+==================================+
+| 1.2.0       | 2024-04-04        | Upgrade to latest FastAPI and    |
+|             |                   | Pydantic.                        |
++-------------+-------------------+----------------------------------+
 | 1.1.2       | 2024-03-12        | Pinned dependencies after a      |
 |             |                   | breaking update to fastapi-xml   |
 |             |                   | was released.                    |
