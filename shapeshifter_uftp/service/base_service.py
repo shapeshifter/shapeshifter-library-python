@@ -1,3 +1,4 @@
+from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timezone
 from queue import Queue
 from uuid import uuid4
@@ -103,21 +104,15 @@ class ShapeshifterService():
         self.server = uvicorn.Server(config)
         self.server_thread = None
 
-        # Create an incoming queue for post-processing messages. This
-        # queue is filled by the pre_process methods of the
-        # subclasses, and is consumed by the post_process method
-        self.inbound_queue = Queue()
+        # Create an inbound executor worker
+        self.inbound_executor = ThreadPoolExecutor(max_workers=self.num_inbound_threads)
+
 
     def run(self):
         """
         Start the web server that hosts the FastAPI application. Other
         participants can now send messages to us.
         """
-        # Start the inbound workers as separate, daemonized threads
-        for _ in range(self.num_inbound_threads):
-            thread = Thread(target=self._inbound_worker, daemon=True)
-            thread.start()
-
         # Start the service and start accepting incoming requests.
         self.server.run()
 
@@ -196,7 +191,7 @@ class ShapeshifterService():
             # user-defined pipeline.
             response = self._pre_process_message(unsealed_message)
             if response.result == AcceptedRejected.ACCEPTED:
-                self.inbound_queue.put(unsealed_message)
+                self.inbound_executor.submit(self._process_message, unsealed_message)
 
         # Add the default parameters to the PayloadMessageResponse.
         response.version = self.protocol_version
@@ -234,24 +229,13 @@ class ShapeshifterService():
         """
         process_method_name = f"process_{snake_case(message.__class__.__name__)}"
         process_method = getattr(self, process_method_name)
-        process_method(message)
-
-    def _inbound_worker(self):
-        """
-        Worker that reads from the inbound queue and calls the
-        handling function to post-process the message.
-        """
-        while True:
-            message = self.inbound_queue.get()
-            try:
-                self._process_message(message)
-            except Exception as err:
-                logger.error(
-                    f"An error occurred during the post-processing of a {message.__class__.__name__} message."
-                    f"{err.__class__.__name__}: {err}"
-                )
-            finally:
-                self.inbound_queue.task_done()
+        try:
+            process_method(message)
+        except Exception as err:
+            logger.error(
+                f"An error occurred during the post-processing of a {message.__class__.__name__} message."
+                f"{err.__class__.__name__}: {err}"
+            )
 
     def _get_client(self, recipient_domain, recipient_role):
         """
