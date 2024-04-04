@@ -5,10 +5,10 @@ from time import sleep
 from threading import Thread
 import re
 
+import uvicorn
 from fastapi import FastAPI
 from fastapi.exceptions import HTTPException
-from fastapi_xml import XmlAppResponse, NonJsonRoute
-import uvicorn
+from fastapi_xml import XmlAppResponse, XmlRoute
 
 from ..client import client_map
 from ..uftp import (
@@ -88,7 +88,7 @@ class ShapeshifterService():
         # (one) endpoint, and by virtue of FastAPI-XML convert the
         # python-friendly objects into XML and vice versa.
         self.app = FastAPI(default_response_class=XmlAppResponse)
-        self.app.router.route_class = NonJsonRoute
+        self.app.router.route_class = XmlRoute
         self.app.router.add_api_route(
             path,
             endpoint=self._receive_message,
