@@ -9,7 +9,6 @@ from .agr_cro import (
     AgrPortfolioUpdateConnection,
     AgrPortfolioUpdateResponse,
 )
-
 from .agr_dso import (
     ContractSettlement,
     ContractSettlementISP,
@@ -40,21 +39,18 @@ from .agr_dso import (
     FlexSettlement,
     FlexSettlementResponse,
 )
-
 from .common import (
-    AcceptedRejected,
     AcceptedDisputed,
+    AcceptedRejected,
     AvailableRequested,
     PayloadMessage,
     PayloadMessageResponse,
+    RedispatchBy,
     SignedMessage,
     TestMessage,
     TestMessageResponse,
     UsefRole,
-    RedispatchBy,
 )
-
-
 from .cro_dso import (
     DsoPortfolioQuery,
     DsoPortfolioQueryCongestionPoint,

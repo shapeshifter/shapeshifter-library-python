@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from .base_service import ShapeshifterService
+
 from ..client import ShapeshifterDsoAgrClient, ShapeshifterDsoCroClient
 from ..uftp import (
     AcceptedRejected,
@@ -10,11 +10,12 @@ from ..uftp import (
     FlexOfferRevocation,
     FlexOrderResponse,
     FlexRequestResponse,
-    FlexSettlementResponse,
     FlexReservationUpdateResponse,
+    FlexSettlementResponse,
     Metering,
     PayloadMessageResponse,
 )
+from .base_service import ShapeshifterService
 
 
 class ShapeshifterDsoService(ShapeshifterService, ABC):

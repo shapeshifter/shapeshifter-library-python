@@ -1,30 +1,28 @@
 """
 Defines the message transport, including message signatures.
 """
-from base64 import b64encode, b64decode
+import re
+from base64 import b64decode, b64encode
 from binascii import Error as BinAsciiError
 from datetime import datetime
-import re
 
 import dns.resolver
-from nacl.exceptions import BadSignatureError
 from nacl.bindings import crypto_sign, crypto_sign_open
-
+from nacl.exceptions import BadSignatureError
 from xsdata.exceptions import ParserError
 from xsdata.formats.dataclass.context import XmlContext
-from xsdata.formats.dataclass.parsers import XmlParser, JsonParser
-from xsdata.formats.dataclass.serializers import XmlSerializer, JsonSerializer
+from xsdata.formats.dataclass.parsers import JsonParser, XmlParser
+from xsdata.formats.dataclass.serializers import JsonSerializer, XmlSerializer
 from xsdata.formats.dataclass.serializers.config import SerializerConfig
 
-from .uftp import PayloadMessage
 from .exceptions import (
     AuthenticationTimeoutException,
     InvalidSignatureException,
     SchemaException,
     ServiceDiscoveryException,
 )
-
 from .logging import logger
+from .uftp import PayloadMessage
 
 _context = XmlContext()
 serializer = XmlSerializer(context=_context, config=SerializerConfig(pretty_print=True))

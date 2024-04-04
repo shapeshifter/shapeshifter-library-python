@@ -1,6 +1,6 @@
 import pytest
 import itertools
-from shapeshifter_uftp.service import snake_case
+from shapeshifter_uftp.service.base_service import snake_case
 from shapeshifter_uftp import ShapeshifterAgrService, ShapeshifterDsoService, ShapeshifterCroService
 
 @pytest.mark.parametrize('service,message_type,stage',

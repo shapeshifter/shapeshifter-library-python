@@ -1,7 +1,8 @@
 from abc import ABC, abstractmethod
-from .base_service import ShapeshifterService
+
 from ..client import ShapeshifterAgrCroClient, ShapeshifterAgrDsoClient
 from ..uftp import (
+    AcceptedRejected,
     AgrPortfolioQueryResponse,
     AgrPortfolioUpdateResponse,
     DPrognosisResponse,
@@ -13,8 +14,8 @@ from ..uftp import (
     FlexSettlement,
     MeteringResponse,
     PayloadMessageResponse,
-    AcceptedRejected
 )
+from .base_service import ShapeshifterService
 
 
 class ShapeshifterAgrService(ShapeshifterService, ABC):

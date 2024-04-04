@@ -1,14 +1,16 @@
-from datetime import datetime, timezone
 import sched
 import time
+from datetime import datetime, timezone
 from queue import Queue
-from threading import Thread, Event
+from threading import Event, Thread
 from uuid import uuid4
+
 import requests
-from ..uftp import PayloadMessage, PayloadMessageResponse, SignedMessage
-from ..logging import logger
-from ..exceptions import ClientTransportException
+
 from .. import transport
+from ..exceptions import ClientTransportException
+from ..logging import logger
+from ..uftp import PayloadMessage, PayloadMessageResponse, SignedMessage
 
 
 class ShapeshifterClient():

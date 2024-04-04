@@ -1,15 +1,15 @@
-from .base_client import ShapeshifterClient
 from ..uftp import (
     DPrognosisResponse,
-    FlexRequest,
     FlexOfferResponse,
-    FlexOrder,
-    FlexReservationUpdate,
     FlexOfferRevocationResponse,
+    FlexOrder,
+    FlexRequest,
+    FlexReservationUpdate,
     FlexSettlement,
-    PayloadMessageResponse,
     MeteringResponse,
+    PayloadMessageResponse,
 )
+from .base_client import ShapeshifterClient
 
 
 class ShapeshifterDsoAgrClient(ShapeshifterClient):

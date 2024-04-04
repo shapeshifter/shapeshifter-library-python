@@ -5,9 +5,12 @@ development of Shapeshifter applications.
 
 from argparse import ArgumentParser
 from base64 import b64encode
+
 from nacl.bindings import crypto_sign_keypair
+
 from . import transport
-from .exceptions import ServiceDiscoveryException, AuthenticationTimeoutException
+from .exceptions import AuthenticationTimeoutException, ServiceDiscoveryException
+
 
 def generate_signing_keypair():
     """

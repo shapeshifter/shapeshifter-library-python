@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from .base_service import ShapeshifterService
+
 from ..client import ShapeshifterCroAgrClient, ShapeshifterCroDsoClient
 from ..uftp import (
     AcceptedRejected,
@@ -7,8 +7,10 @@ from ..uftp import (
     AgrPortfolioUpdate,
     DsoPortfolioQuery,
     DsoPortfolioUpdate,
-    PayloadMessageResponse
+    PayloadMessageResponse,
 )
+from .base_service import ShapeshifterService
+
 
 class ShapeshifterCroService(ShapeshifterService, ABC):
     """

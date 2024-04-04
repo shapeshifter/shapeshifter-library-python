@@ -1,31 +1,30 @@
+import re
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timezone
-from queue import Queue
-from uuid import uuid4
-from time import sleep
 from threading import Thread
-import re
+from time import sleep
+from uuid import uuid4
 
 import uvicorn
 from fastapi import FastAPI
 from fastapi.exceptions import HTTPException
 from fastapi_xml import XmlAppResponse, XmlRoute
 
+from .. import transport
 from ..client import client_map
-from ..uftp import (
-    SignedMessage,
-    PayloadMessage,
-    PayloadMessageResponse,
-    AcceptedRejected,
-)
 from ..exceptions import (
     FunctionalException,
-    TransportException,
-    InvalidSenderException,
     InvalidMessageException,
+    InvalidSenderException,
+    TransportException,
 )
 from ..logging import logger
-from .. import transport
+from ..uftp import (
+    AcceptedRejected,
+    PayloadMessage,
+    PayloadMessageResponse,
+    SignedMessage,
+)
 
 
 class ShapeshifterService():

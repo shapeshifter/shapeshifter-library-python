@@ -1,5 +1,5 @@
 import pytest
-from shapeshifter_uftp.service import snake_case
+from shapeshifter_uftp.service.base_service import snake_case
 
 
 @pytest.mark.parametrize('text,expected_result',

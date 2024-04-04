@@ -1,9 +1,5 @@
+from ..uftp import AgrPortfolioQuery, AgrPortfolioUpdate, PayloadMessageResponse
 from .base_client import ShapeshifterClient
-from ..uftp import (
-    PayloadMessageResponse,
-    AgrPortfolioQuery,
-    AgrPortfolioUpdate,
-)
 
 
 class ShapeshifterAgrCroClient(ShapeshifterClient):

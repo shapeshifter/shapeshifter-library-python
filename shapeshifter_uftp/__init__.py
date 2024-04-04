@@ -8,8 +8,8 @@ from .client import (
 )
 from .service import (
     ShapeshifterAgrService,
-    ShapeshifterDsoService,
     ShapeshifterCroService,
+    ShapeshifterDsoService,
 )
 from .uftp import (
     AcceptedRejected,
@@ -60,7 +60,6 @@ from .uftp import (
     FlexSettlementResponse,
     Metering,
     MeteringISP,
-    # MeteringMessage,
     MeteringProfile,
     MeteringProfileEnum,
     MeteringResponse,
@@ -131,7 +130,6 @@ __all__ = [
     "FlexSettlementResponse",
     "Metering",
     "MeteringISP",
-    # "MeteringMessage",
     "MeteringProfile",
     "MeteringProfileEnum",
     "MeteringResponse",

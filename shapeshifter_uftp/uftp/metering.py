@@ -2,13 +2,11 @@ from dataclasses import dataclass, field
 from decimal import Decimal
 from enum import Enum
 from typing import List, Optional
-from xsdata.models.datatype import XmlDate, XmlDuration
-from .common import (
-    PayloadMessageResponse,
-    PayloadMessage,
-)
-from .validations import validate_list
 
+from xsdata.models.datatype import XmlDate, XmlDuration
+
+from .common import PayloadMessage, PayloadMessageResponse
+from .validations import validate_list
 
 # pylint: disable=missing-class-docstring,duplicate-code
 

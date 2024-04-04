@@ -1,5 +1,5 @@
+from ..uftp import DsoPortfolioQueryResponse, DsoPortfolioUpdateResponse
 from .base_client import ShapeshifterClient
-from ..uftp import DsoPortfolioUpdateResponse, DsoPortfolioQueryResponse
 
 
 class ShapeshifterCroDsoClient(ShapeshifterClient):
