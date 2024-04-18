@@ -1,0 +1,21 @@
+[tool.pytest.ini_options]
+addopts = "-v --cov --cov-report html"
+
+[tool.coverage.run]
+include = [
+    "shapeshifter_uftp/**/*.py",
+]
+omit = [
+    "application/asgi.py",
+]
+
+[tool.coverage.report]
+skip_empty = true
+
+[tool.coverage.html]
+directory = "test_coverage"
+
+[tool.pylint.DESIGN]
+
+[tool.isort]
+profile = "black"
