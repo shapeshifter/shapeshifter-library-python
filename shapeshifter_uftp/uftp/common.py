@@ -46,8 +46,6 @@ class PayloadMessage:
         subsequently copied from the original message to each reply
         message.
     """
-    
-    print("hoi")
 
     version: Optional[str] = field(
         default="3.0.0",
