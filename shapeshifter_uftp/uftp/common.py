@@ -124,6 +124,8 @@ class PayloadMessageResponse(PayloadMessage):
     :ivar rejection_reason: In case the query failed, this attribute
         must contain a human-readable description of the failure reason.
     """
+    
+    
 
     result: Optional[AcceptedRejected] = field(
         default=AcceptedRejected.ACCEPTED,
