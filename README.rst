@@ -10,6 +10,15 @@ Installation
 
     pip install shapeshifter-uftp
 
+Running tests
+------------
+
+.. code-block:: bash
+
+    $ pip install .
+    $ pip install .[dev]
+    $ pytest .
+
 
 Documentation
 -------------
