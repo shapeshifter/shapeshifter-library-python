@@ -1,0 +1,28 @@
+# Copyright Contributors to the Shapeshifter project
+#
+# SPDX-License-Identifier: Apache-2.0
+
+name: run-tests
+
+on:
+  push:
+    branches:
+      - main
+permissions:
+  contents: write
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # checkout branch history required to update
+      - uses: actions/setup-python@v4
+        with:
+          python-version: 3.x
+      - name: Install dependencies
+        run: pip install xsdata[lxml]==24.4, pynacl==1.5.0, dnspython==2.6.1, fastapi==0.110, fastapi-xml==1.1.0, requests, uvicorn, termcolor
+      - name: Install test dependencies
+        run: pip install xmlschema, pytest, pytest-cov, pylint, sphinx, sphinx-rtd-theme
+      - name: Run pytest
+        run: pytest .
