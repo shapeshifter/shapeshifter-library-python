@@ -1,5 +1,5 @@
 [tool.pytest.ini_options]
-addopts = "-v --cov --cov-report html"
+addopts = "-v --cov --cov-report html --cov-report lcov"
 
 [tool.coverage.run]
 include = [
