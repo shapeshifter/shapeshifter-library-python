@@ -13,7 +13,7 @@ from ..logging import logger
 from ..uftp import PayloadMessage, PayloadMessageResponse, SignedMessage
 
 
-class ShapeshifterClient():
+class ShapeshifterClient:
     """
     Basis for all Shapeshifter client.
     """
@@ -90,7 +90,9 @@ class ShapeshifterClient():
         message.sender_domain = self.sender_domain
         message.sender_role = self.sender_role
         message.recipient_domain = self.recipient_domain
-        message.time_stamp = message.time_stamp or datetime.now(timezone.utc).isoformat()
+        message.time_stamp = (
+            message.time_stamp or datetime.now(timezone.utc).isoformat()
+        )
         message.message_id = message.message_id or str(uuid4())
         message.conversation_id = message.conversation_id or str(uuid4())
 
@@ -103,7 +105,7 @@ class ShapeshifterClient():
         signed_message = SignedMessage(
             sender_domain=self.sender_domain,
             sender_role=self.sender_role,
-            body=sealed_message
+            body=sealed_message,
         )
 
         # Serialize the message into an XML blob
@@ -139,15 +141,15 @@ class ShapeshifterClient():
         # implementation caches the DNS lookups so they are not that
         # expensive after the first time.
         if not (recipient_signing_key := self.recipient_signing_key):
-            recipient_signing_key = transport.get_key(self.recipient_domain, self.recipient_role)
+            recipient_signing_key = transport.get_key(
+                self.recipient_domain, self.recipient_role
+            )
 
         # Unseal the response using the other party's public signing
         # key and return the response message within it
         return transport.unseal_message(
-            message=sealed_response.body,
-            public_key=recipient_signing_key
+            message=sealed_response.body, public_key=recipient_signing_key
         )
-
 
     # ------------------------------------------------------------ #
     #     Methods related to queueing and scheduling outgoing      #
@@ -163,10 +165,13 @@ class ShapeshifterClient():
             message, callback, attempt = self.outgoing_queue.get()
             try:
                 response = self._send_message(message)
-            except Exception as exc:
+            except Exception as exc:  # pylint: disable=broad-exception-caught
                 if attempt <= self.num_delivery_attempts:
                     # Reschedule with exponential backoff
-                    delay_time = self.exponential_retry_factor * self.exponential_retry_base ** attempt
+                    delay_time = (
+                        self.exponential_retry_factor
+                        * self.exponential_retry_base**attempt
+                    )
                     logger.warning(
                         f"Outgoing message {message.__class__.__name__} to "
                         f"{message.recipient_domain} could not be delivered "
@@ -176,7 +181,7 @@ class ShapeshifterClient():
                         delay=delay_time,
                         priority=1,
                         action=self._queue_message,
-                        argument=((message, callback, attempt + 1))
+                        argument=((message, callback, attempt + 1)),
                     )
                     self._run_scheduler()
                 else:
@@ -188,10 +193,12 @@ class ShapeshifterClient():
             else:
                 try:
                     callback(response)
-                except Exception as err:
-                    logger.error("There was an exception during the callback "
-                                 f"for a {message.__class__.__name__} message: "
-                                 f"{err.__class__.__name__}: {err}")
+                except Exception as err:  # pylint: disable=broad-exception-caught
+                    logger.error(
+                        "There was an exception during the callback "
+                        f"for a {message.__class__.__name__} message: "
+                        f"{err.__class__.__name__}: {err}"
+                    )
             finally:
                 self.outgoing_queue.task_done()
 
@@ -219,7 +226,10 @@ class ShapeshifterClient():
         Start up the outgoing queue workers.
         """
         if not self.outgoing_workers:
-            self.outgoing_workers = [Thread(target=self._outgoing_worker, daemon=True) for _ in range(self.num_outgoing_workers)]
+            self.outgoing_workers = [
+                Thread(target=self._outgoing_worker, daemon=True)
+                for _ in range(self.num_outgoing_workers)
+            ]
             for thread in self.outgoing_workers:
                 thread.start()
 
