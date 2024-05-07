@@ -42,7 +42,6 @@ class ShapeshifterDsoService(ShapeshifterService, ABC):
         Metering,
     ]
 
-
     # ------------------------------------------------------------ #
     #      Methods related to processing D Prognosis messages      #
     # ------------------------------------------------------------ #
@@ -66,13 +65,14 @@ class ShapeshifterDsoService(ShapeshifterService, ABC):
         operations outside of the request context.
         """
 
-
     # ------------------------------------------------------------ #
     #     Methods related to processing Flex Request Response      #
     #                           messages                           #
     # ------------------------------------------------------------ #
 
-    def pre_process_flex_request_response(self, message: FlexRequestResponse) -> PayloadMessageResponse:
+    def pre_process_flex_request_response(
+        self, message: FlexRequestResponse
+    ) -> PayloadMessageResponse:
         """
         FlexOffer messages are used by AGRs to make DSOs an offer for provision
         of flexibility. A FlexOffer message contains a list of ISPs and, for
@@ -95,11 +95,9 @@ class ShapeshifterDsoService(ShapeshifterService, ABC):
         outside of the request context.
         """
 
-
     # ------------------------------------------------------------ #
     #      Methods related to processing Flex Offer messages       #
     # ------------------------------------------------------------ #
-
 
     def pre_process_flex_offer(self, message: FlexOffer) -> PayloadMessageResponse:
         """
@@ -124,12 +122,13 @@ class ShapeshifterDsoService(ShapeshifterService, ABC):
         outside of the request context.
         """
 
-
     # ------------------------------------------------------------ #
     #  Methods related to processing Flex Order Response messages  #
     # ------------------------------------------------------------ #
 
-    def pre_process_flex_order_response(self, message: FlexOrderResponse) -> PayloadMessageResponse:
+    def pre_process_flex_order_response(
+        self, message: FlexOrderResponse
+    ) -> PayloadMessageResponse:
         """
         Upon receiving and processing a FlexOrder message, the receiving
         implementation must reply with a FlexOrderResponse, indicating whether
@@ -145,13 +144,14 @@ class ShapeshifterDsoService(ShapeshifterService, ABC):
         operations outside of the request context.
         """
 
-
     # ------------------------------------------------------------ #
     #     Methods related to processing Flex Offer Revocation      #
     #                           messages                           #
     # ------------------------------------------------------------ #
 
-    def pre_process_flex_offer_revocation(self, message: FlexOfferRevocation) -> PayloadMessageResponse:
+    def pre_process_flex_offer_revocation(
+        self, message: FlexOfferRevocation
+    ) -> PayloadMessageResponse:
         """
         The FlexOfferRevocation message is used by the AGR to revoke a FlexOffer
         previously sent to a DSO. It voids the FlexOffer, even if its validity
@@ -168,13 +168,14 @@ class ShapeshifterDsoService(ShapeshifterService, ABC):
         outside of the request context.
         """
 
-
     # ------------------------------------------------------------ #
     #    Methods related to processing Flex Reservation Update     #
     #                      Response messages                       #
     # ------------------------------------------------------------ #
 
-    def pre_process_flex_reservation_update_response(self, message: FlexReservationUpdateResponse) -> PayloadMessageResponse:
+    def pre_process_flex_reservation_update_response(
+        self, message: FlexReservationUpdateResponse
+    ) -> PayloadMessageResponse:
         """
         The FlexOfferRevocation message is used by the AGR to revoke a FlexOffer
         previously sent to a DSO. It voids the FlexOffer, even if its validity
@@ -184,20 +185,23 @@ class ShapeshifterDsoService(ShapeshifterService, ABC):
         return PayloadMessageResponse(result=AcceptedRejected.ACCEPTED)
 
     @abstractmethod
-    def process_flex_reservation_update_response(self, message: FlexReservationUpdateResponse):
+    def process_flex_reservation_update_response(
+        self, message: FlexReservationUpdateResponse
+    ):
         """
         This method runs separately from the pre_process_flex_offer_revocation
         function. It gives you the chance to perform longer-running operations
         outside of the request context.
         """
 
-
     # ------------------------------------------------------------ #
     #    Methods related to processing Flex Settlement Response    #
     #                           messages                           #
     # ------------------------------------------------------------ #
 
-    def pre_process_flex_settlement_response(self, message: FlexSettlementResponse) -> PayloadMessageResponse:
+    def pre_process_flex_settlement_response(
+        self, message: FlexSettlementResponse
+    ) -> PayloadMessageResponse:
         """
         Upon receiving and processing a FlexSettlement message, the AGR must
         reply with a FlexSettlementResponse, indicating whether the initial
@@ -215,13 +219,14 @@ class ShapeshifterDsoService(ShapeshifterService, ABC):
         to perform longer-running operations outside of the request context.
         """
 
-
     # ------------------------------------------------------------ #
     #  Methods related to processing DSO Portfolio Query Response  #
     #                           messages                           #
     # ------------------------------------------------------------ #
 
-    def pre_process_dso_portfolio_query_response(self, message: DsoPortfolioQueryResponse) -> PayloadMessageResponse:
+    def pre_process_dso_portfolio_query_response(
+        self, message: DsoPortfolioQueryResponse
+    ) -> PayloadMessageResponse:
         """
         Upon receiving and processing a DSOPortfolioQuery message, the receiving
         implementation must reply with a DSOPortfolioQueryResponse, indicating
@@ -237,13 +242,14 @@ class ShapeshifterDsoService(ShapeshifterService, ABC):
         finised.
         """
 
-
     # ------------------------------------------------------------ #
     #      Methods related to processing DSO Portfolio Update      #
     #                      Response messages                       #
     # ------------------------------------------------------------ #
 
-    def pre_process_dso_portfolio_update_response(self, message: DsoPortfolioUpdateResponse) -> PayloadMessageResponse:
+    def pre_process_dso_portfolio_update_response(
+        self, message: DsoPortfolioUpdateResponse
+    ) -> PayloadMessageResponse:
         """
         Upon receiving and processing a DSOPortfolioUpdate message, the
         receiving implementation must reply with a DSOPortfolioUpdateResponse,
@@ -252,12 +258,13 @@ class ShapeshifterDsoService(ShapeshifterService, ABC):
         return PayloadMessageResponse(result=AcceptedRejected.ACCEPTED)
 
     @abstractmethod
-    def process_dso_portfolio_update_response(self, message: DsoPortfolioUpdateResponse):
+    def process_dso_portfolio_update_response(
+        self, message: DsoPortfolioUpdateResponse
+    ):
         """
         This method runs after the pre_process_portfolio_update_response method
         has finished.
         """
-
 
     # ------------------------------------------------------------ #
     #       Methods related to processing Metering messages        #
@@ -281,7 +288,6 @@ class ShapeshifterDsoService(ShapeshifterService, ABC):
         This method runs after the pre_process_metering method has finished.
         """
 
-
     # ------------------------------------------------------------ #
     #  Convenience methods for getting a client to the designated  #
     #                         participant.                         #
@@ -291,10 +297,10 @@ class ShapeshifterDsoService(ShapeshifterService, ABC):
         """
         Retrieve a client object for sending messages to the AGR.
         """
-        return self._get_client(recipient_domain, 'AGR')
+        return self._get_client(recipient_domain, "AGR")
 
     def cro_client(self, recipient_domain) -> ShapeshifterDsoCroClient:
         """
         Retrieve a client object for sending messages to the CRO.
         """
-        return self._get_client(recipient_domain, 'CRO')
+        return self._get_client(recipient_domain, "CRO")
