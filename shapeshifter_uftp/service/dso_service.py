@@ -18,6 +18,7 @@ from ..uftp import (
 from .base_service import ShapeshifterService
 
 
+# pylint: disable=too-many-public-methods
 class ShapeshifterDsoService(ShapeshifterService, ABC):
     """
     Service that represents the Distribution System Operator in the UFTP communication.

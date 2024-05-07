@@ -230,7 +230,7 @@ class ShapeshifterService():
         process_method = getattr(self, process_method_name)
         try:
             process_method(message)
-        except Exception as err:
+        except Exception as err:  # pylint: disable=broad-exception-caught
             logger.error(
                 f"An error occurred during the post-processing of a {message.__class__.__name__} message."
                 f"{err.__class__.__name__}: {err}"

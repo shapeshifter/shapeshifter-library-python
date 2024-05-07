@@ -83,8 +83,7 @@ def from_xml(message: str | bytes):
         return parser.from_string(message)
     if isinstance(message, bytes):
         return parser.from_bytes(message)
-    else:
-        raise TypeError(f"Message should be either bytes or str, not {type(message)}")
+    raise TypeError(f"Message should be either bytes or str, not {type(message)}")
 
 
 def to_json(message: PayloadMessage):
