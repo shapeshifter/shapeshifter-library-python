@@ -432,7 +432,6 @@ disable=raw-checker-failed,
         too-few-public-methods,
         missing-module-docstring,
         logging-fstring-interpolation,
-        unused-argument,
 
 
 # Enable the message, report, category or checker with the given id(s). You can

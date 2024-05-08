@@ -47,7 +47,7 @@ class ShapeshifterAgrService(
     # ------------------------------------------------------------ #
 
     def pre_process_d_prognosis_response(
-        self, message: DPrognosisResponse
+        self, message: DPrognosisResponse  # pylint: disable=unused-argument
     ) -> PayloadMessageResponse:
         """
         FlexOffer messages are used by AGRs to make DSOs an offer for provision
@@ -75,7 +75,9 @@ class ShapeshifterAgrService(
     #      Methods related to processing Flex Request messages      #
     # ------------------------------------------------------------ #
 
-    def pre_process_flex_request(self, message: FlexRequest) -> PayloadMessageResponse:
+    def pre_process_flex_request(
+        self, message: FlexRequest  # pylint: disable=unused-argument
+    ) -> PayloadMessageResponse:
         """
         FlexRequest messages are used by DSOs to request flexibility from AGRs.
         In addition to one or more ISP elements with Disposition=Requested,
@@ -83,7 +85,6 @@ class ShapeshifterAgrService(
         message should also include the remaining ISPs for the current period
         where Disposition=Available.
         """
-        # pylint: disable=unused-argument
         return PayloadMessageResponse(result=AcceptedRejected.ACCEPTED)
 
     @abstractmethod
@@ -105,7 +106,7 @@ class ShapeshifterAgrService(
     # ------------------------------------------------------------ #
 
     def pre_process_flex_offer_response(
-        self, message: FlexOfferResponse
+        self, message: FlexOfferResponse  # pylint: disable=unused-argument
     ) -> PayloadMessageResponse:
         """
         FlexRequest messages are used by DSOs to request flexibility from AGRs.
@@ -114,7 +115,6 @@ class ShapeshifterAgrService(
         message should also include the remaining ISPs for the current period
         where Disposition=Available.
         """
-        # pylint: disable=unused-argument
         return PayloadMessageResponse(result=AcceptedRejected.ACCEPTED)
 
     @abstractmethod
@@ -137,14 +137,13 @@ class ShapeshifterAgrService(
     # ------------------------------------------------------------ #
 
     def pre_process_flex_offer_revocation_response(
-        self, message: FlexOfferRevocationResponse
+        self, message: FlexOfferRevocationResponse  # pylint: disable=unused-argument
     ) -> PayloadMessageResponse:
         """
         Upon receiving and processing a FlexOfferRevocation message, the
         receiving implementation must reply with a FlexOfferRevocationResponse,
         indicating whether the revocation was handled successfully.
         """
-        # pylint: disable=unused-argument
         return PayloadMessageResponse(result=AcceptedRejected.ACCEPTED)
 
     @abstractmethod
@@ -168,7 +167,9 @@ class ShapeshifterAgrService(
     #       Methods related to processing FlexOrder messages       #
     # ------------------------------------------------------------ #
 
-    def pre_process_flex_order(self, message: FlexOrder) -> PayloadMessageResponse:
+    def pre_process_flex_order(
+        self, message: FlexOrder  # pylint: disable=unused-argument
+    ) -> PayloadMessageResponse:
         """
         FlexOrder messages are used by DSOs to purchase flexibility from an AGR
         based on a previous FlexOffer. A FlexOrder message contains a list of
@@ -179,7 +180,6 @@ class ShapeshifterAgrService(
         (and must) reject FlexOrder messages where the ISP list is not exactly
         the same as offered.
         """
-        # pylint: disable=unused-argument
         return PayloadMessageResponse(result=AcceptedRejected.ACCEPTED)
 
     @abstractmethod
@@ -196,7 +196,7 @@ class ShapeshifterAgrService(
     # ------------------------------------------------------------ #
 
     def pre_process_flex_reservation_update(
-        self, message: FlexReservationUpdate
+        self, message: FlexReservationUpdate  # pylint: disable=unused-argument
     ) -> PayloadMessageResponse:
         """
         For bilateral contracts, FlexReservationUpdate messages are used by DSOs
@@ -206,7 +206,6 @@ class ShapeshifterAgrService(
         power is still reserved. Zero power means that no power is reserved for
         that ISP and the sign of the power indicates the direction.
         """
-        # pylint: disable=unused-argument
         return PayloadMessageResponse(result=AcceptedRejected.ACCEPTED)
 
     @abstractmethod
@@ -223,7 +222,7 @@ class ShapeshifterAgrService(
     # ------------------------------------------------------------ #
 
     def pre_process_flex_settlement(
-        self, message: FlexSettlement
+        self, message: FlexSettlement  # pylint: disable=unused-argument
     ) -> PayloadMessageResponse:
         """
         The FlexSettlement message is sent by DSOs on a regular basis
@@ -231,7 +230,6 @@ class ShapeshifterAgrService(
         includes a list of all FlexOrders placed by the originating party
         during the settlement period.
         """
-        # pylint: disable=unused-argument
         return PayloadMessageResponse(result=AcceptedRejected.ACCEPTED)
 
     @abstractmethod
@@ -254,14 +252,13 @@ class ShapeshifterAgrService(
     # ------------------------------------------------------------ #
 
     def pre_process_metering_response(
-        self, message: MeteringResponse
+        self, message: MeteringResponse  # pylint: disable=unused-argument
     ) -> PayloadMessageResponse:
         """
         Upon receiving and processing a Metering message, the
         receiving implementation must reply with a MeteringResponse,
         indicating whether the update was handled successfully.
         """
-        # pylint: disable=unused-argument
         return PayloadMessageResponse(result=AcceptedRejected.ACCEPTED)
 
     @abstractmethod
@@ -285,7 +282,7 @@ class ShapeshifterAgrService(
     # ------------------------------------------------------------ #
 
     def pre_process_agr_portfolio_query_response(
-        self, message: AgrPortfolioQueryResponse
+        self, message: AgrPortfolioQueryResponse  # pylint: disable=unused-argument
     ) -> PayloadMessageResponse:
         """
         The AgrPortfolioQueryResponse is sent by the CRO after you sent a
@@ -295,7 +292,6 @@ class ShapeshifterAgrService(
         Longer-running operations (like a database sync) should be done inside
         the process_agr_portfolio_query_response method.
         """
-        # pylint: disable=unused-argument
         return PayloadMessageResponse(result=AcceptedRejected.ACCEPTED)
 
     @abstractmethod
@@ -320,7 +316,7 @@ class ShapeshifterAgrService(
     # ------------------------------------------------------------ #
 
     def pre_process_agr_portfolio_update_response(
-        self, message: AgrPortfolioUpdateResponse
+        self, message: AgrPortfolioUpdateResponse  # pylint: disable=unused-argument
     ):
         """
         The AgrPortfolioUptadeResponse is sent by the CRO after you sent a
@@ -330,7 +326,6 @@ class ShapeshifterAgrService(
         Longer-running operations (like a database sync) should be done inside
         the process_agr_portfolio_query_response method.
         """
-        # pylint: disable=unused-argument
         return PayloadMessageResponse(result=AcceptedRejected.ACCEPTED)
 
     @abstractmethod

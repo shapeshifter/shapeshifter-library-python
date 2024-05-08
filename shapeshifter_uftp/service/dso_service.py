@@ -46,7 +46,9 @@ class ShapeshifterDsoService(ShapeshifterService, ABC):
     #      Methods related to processing D Prognosis messages      #
     # ------------------------------------------------------------ #
 
-    def pre_process_d_prognosis(self, message: DPrognosis) -> PayloadMessageResponse:
+    def pre_process_d_prognosis(
+        self, message: DPrognosis  # pylint: disable=unused-argument
+    ) -> PayloadMessageResponse:
         """
         D-Prognosis messages are used to communicate D-prognoses between AGRs
         and DSOs. D-Prognosis messages always contain data for all ISPs for the
@@ -71,7 +73,7 @@ class ShapeshifterDsoService(ShapeshifterService, ABC):
     # ------------------------------------------------------------ #
 
     def pre_process_flex_request_response(
-        self, message: FlexRequestResponse
+        self, message: FlexRequestResponse  # pylint: disable=unused-argument
     ) -> PayloadMessageResponse:
         """
         FlexOffer messages are used by AGRs to make DSOs an offer for provision
@@ -99,7 +101,9 @@ class ShapeshifterDsoService(ShapeshifterService, ABC):
     #      Methods related to processing Flex Offer messages       #
     # ------------------------------------------------------------ #
 
-    def pre_process_flex_offer(self, message: FlexOffer) -> PayloadMessageResponse:
+    def pre_process_flex_offer(
+        self, message: FlexOffer  # pylint: disable=unused-argument
+    ) -> PayloadMessageResponse:
         """
         FlexOffer messages are used by AGRs to make DSOs an offer for provision
         of flexibility. A FlexOffer message contains a list of ISPs and, for
@@ -127,7 +131,7 @@ class ShapeshifterDsoService(ShapeshifterService, ABC):
     # ------------------------------------------------------------ #
 
     def pre_process_flex_order_response(
-        self, message: FlexOrderResponse
+        self, message: FlexOrderResponse  # pylint: disable=unused-argument
     ) -> PayloadMessageResponse:
         """
         Upon receiving and processing a FlexOrder message, the receiving
@@ -150,7 +154,7 @@ class ShapeshifterDsoService(ShapeshifterService, ABC):
     # ------------------------------------------------------------ #
 
     def pre_process_flex_offer_revocation(
-        self, message: FlexOfferRevocation
+        self, message: FlexOfferRevocation  # pylint: disable=unused-argument
     ) -> PayloadMessageResponse:
         """
         The FlexOfferRevocation message is used by the AGR to revoke a FlexOffer
@@ -174,7 +178,7 @@ class ShapeshifterDsoService(ShapeshifterService, ABC):
     # ------------------------------------------------------------ #
 
     def pre_process_flex_reservation_update_response(
-        self, message: FlexReservationUpdateResponse
+        self, message: FlexReservationUpdateResponse  # pylint: disable=unused-argument
     ) -> PayloadMessageResponse:
         """
         The FlexOfferRevocation message is used by the AGR to revoke a FlexOffer
@@ -200,7 +204,7 @@ class ShapeshifterDsoService(ShapeshifterService, ABC):
     # ------------------------------------------------------------ #
 
     def pre_process_flex_settlement_response(
-        self, message: FlexSettlementResponse
+        self, message: FlexSettlementResponse  # pylint: disable=unused-argument
     ) -> PayloadMessageResponse:
         """
         Upon receiving and processing a FlexSettlement message, the AGR must
@@ -225,7 +229,7 @@ class ShapeshifterDsoService(ShapeshifterService, ABC):
     # ------------------------------------------------------------ #
 
     def pre_process_dso_portfolio_query_response(
-        self, message: DsoPortfolioQueryResponse
+        self, message: DsoPortfolioQueryResponse  # pylint: disable=unused-argument
     ) -> PayloadMessageResponse:
         """
         Upon receiving and processing a DSOPortfolioQuery message, the receiving
@@ -248,7 +252,7 @@ class ShapeshifterDsoService(ShapeshifterService, ABC):
     # ------------------------------------------------------------ #
 
     def pre_process_dso_portfolio_update_response(
-        self, message: DsoPortfolioUpdateResponse
+        self, message: DsoPortfolioUpdateResponse  # pylint: disable=unused-argument
     ) -> PayloadMessageResponse:
         """
         Upon receiving and processing a DSOPortfolioUpdate message, the
@@ -270,7 +274,9 @@ class ShapeshifterDsoService(ShapeshifterService, ABC):
     #       Methods related to processing Metering messages        #
     # ------------------------------------------------------------ #
 
-    def pre_process_metering(self, message: Metering) -> PayloadMessageResponse:
+    def pre_process_metering(
+        self, message: Metering  # pylint: disable=unused-argument
+    ) -> PayloadMessageResponse:
         """
         The Metering message is an optional message. The DSO will specify
         whether metering messages are required for a given program. If metering
