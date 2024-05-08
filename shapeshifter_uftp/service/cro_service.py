@@ -20,14 +20,20 @@ class ShapeshifterCroService(ShapeshifterService, ABC):
     """
 
     sender_role = "CRO"
-    acceptable_messages = [DsoPortfolioQuery, DsoPortfolioUpdate,
-                           AgrPortfolioQuery, AgrPortfolioUpdate]
+    acceptable_messages = [
+        DsoPortfolioQuery,
+        DsoPortfolioUpdate,
+        AgrPortfolioQuery,
+        AgrPortfolioUpdate,
+    ]
 
     # ------------------------------------------------------------ #
     #       Methods related to Agr Portfolio Query messages        #
     # ------------------------------------------------------------ #
 
-    def pre_process_agr_portfolio_query(self, message: AgrPortfolioQuery) -> PayloadMessageResponse:
+    def pre_process_agr_portfolio_query(
+        self, message: AgrPortfolioQuery  # pylint: disable=unused-argument
+    ) -> PayloadMessageResponse:
         """
         The AGRPortfolioQuery is used by the AGR to retrieve
         additional information on the connections.
@@ -42,12 +48,13 @@ class ShapeshifterCroService(ShapeshifterService, ABC):
         operations outside of the request context.
         """
 
-
     # ------------------------------------------------------------ #
     #       Methods related to Agr Portfolio Update messages       #
     # ------------------------------------------------------------ #
 
-    def pre_process_agr_portfolio_update(self, message: AgrPortfolioUpdate) -> PayloadMessageResponse:
+    def pre_process_agr_portfolio_update(
+        self, message: AgrPortfolioUpdate  # pylint: disable=unused-argument
+    ) -> PayloadMessageResponse:
         """
         The AGRPortfolioUpdate is used by the AGR to indicate on which
         Connections it represents prosumers.
@@ -62,12 +69,13 @@ class ShapeshifterCroService(ShapeshifterService, ABC):
         operations outside of the request context.
         """
 
-
     # ------------------------------------------------------------ #
     #       Methods related to DSO Portfolie Query messages        #
     # ------------------------------------------------------------ #
 
-    def pre_process_dso_portfolio_query(self, message: DsoPortfolioQuery) -> PayloadMessageResponse:
+    def pre_process_dso_portfolio_query(
+        self, message: DsoPortfolioQuery  # pylint: disable=unused-argument
+    ) -> PayloadMessageResponse:
         """
         DSOPortfolioQuery is used by DSOs to discover which AGRs represent
         connections on its registered congestion point(s).
@@ -92,7 +100,9 @@ class ShapeshifterCroService(ShapeshifterService, ABC):
     #       Methods related to DSO Portfolio Query messages        #
     # ------------------------------------------------------------ #
 
-    def pre_process_dso_portfolio_update(self, message: DsoPortfolioUpdate) -> PayloadMessageResponse:
+    def pre_process_dso_portfolio_update(
+        self, message: DsoPortfolioUpdate  # pylint: disable=unused-argument
+    ) -> PayloadMessageResponse:
         """
         The DSOPortfolioUpdate is used by the DSO to indicate on which
         congestion points it wants to engage in flexibility trading.
@@ -116,10 +126,10 @@ class ShapeshifterCroService(ShapeshifterService, ABC):
         """
         Retrieve a client object for sending messages to the AGR.
         """
-        return self._get_client(recipient_domain, 'AGR')
+        return self._get_client(recipient_domain, "AGR")
 
     def dso_client(self, recipient_domain) -> ShapeshifterCroDsoClient:
         """
         Retrieve a client object for sending messages to the DSO.
         """
-        return self._get_client(recipient_domain, 'DSO')
+        return self._get_client(recipient_domain, "DSO")
