@@ -25,7 +25,7 @@ from .logging import logger
 from .uftp import PayloadMessage
 
 _context = XmlContext()
-serializer = XmlSerializer(context=_context, config=SerializerConfig(pretty_print=True))
+serializer = XmlSerializer(context=_context, config=SerializerConfig(indent="  "))
 parser = XmlParser(context=_context)
 
 json_serializer = JsonSerializer()
