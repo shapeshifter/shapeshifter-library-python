@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name="shapeshifter-uftp",
-    version="1.2.0",
+    version="1.2.1",
     python_requires=">=3.10",
     description="Allows connections between DSO, AGR and CRO using the Shapeshifter (UFTP) protocol.",
     packages=[
@@ -12,10 +12,10 @@ setup(
         "shapeshifter_uftp.service",
     ],
     install_requires=[
-        "xsdata[lxml]==24.4",
+        "xsdata[lxml]>=24.4,<=24.7",
         "pynacl==1.5.0",
         "dnspython==2.6.1",
-        "fastapi==0.110",
+        "fastapi>=0.110,<=0.113",
         "fastapi-xml==1.1.0",
         "requests",
         "uvicorn",
