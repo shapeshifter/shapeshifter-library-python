@@ -267,3 +267,6 @@ class ClientTransportException(Exception):
     """
     Raised when the response to the client is not HTTP 200.
     """
+    def __init__(self, *args, response, **kwargs):
+        self.response = response
+        super().__init__(*args, **kwargs)

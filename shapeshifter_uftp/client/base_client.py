@@ -127,7 +127,7 @@ class ShapeshifterClient:
                 f"HTTP {response.status_code}: {response.text}"
             )
             logger.error(error_msg)
-            raise ClientTransportException(error_msg)
+            raise ClientTransportException(error_msg, response=response)
 
         # If the response was empty, don't attempt to parse it
         if len(response.content) == 0:
