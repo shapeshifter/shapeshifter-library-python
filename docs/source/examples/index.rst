@@ -11,7 +11,9 @@ Self-contained Aggregator service and client
 
     from shapeshifter_uftp import ShapeshifterAgrService
     from shapeshifter_uftp.uftp import (FlexOffer, FlexOfferOption,
-                                        FlexOfferOptionISP)
+                                        FlexOfferOptionISP, FlexRequest,
+                                        FlexRequestResponse, FlexOrder, FlexOrderResponse,
+                                        AcceptedRejected)
     from xsdata.models.datatype import XmlDate
 
 
@@ -25,23 +27,27 @@ Self-contained Aggregator service and client
         def process_d_prognosis_response(self, message):
             print(f"Received a message: {message}")
 
-        def process_flex_offer_response(self, message):
-            print(f"Received a message: {message}")
-
-        def process_flex_offer_revocation_response(self, message):
-            print(f"Received a message: {message}")
-
-        def process_flex_order(self, message):
-            print(f"Received a message: {message}")
-
-        def process_flex_request(self, message):
+        def process_flex_request(self, message: FlexRequest):
             print(f"Received a message: {message}")
 
             # Example of how to send a new message after
             # processing an incoming message.
             dso_client = self.dso_client(message.sender_domain)
+
+            # Send the FlexRequestResponse
+            dso_client.send_flex_request_response(
+                FlexRequestResponse(
+                    flex_request_message_id=message.message_id,
+                    conversation_id=message.conversation_id,
+                    result=AcceptedRejected.ACCEPTED
+                )
+            )
+
+            # Send the FlexOffer
             dso_client.send_flex_offer(
                 FlexOffer(
+                    flex_request_message_id=message.message_id,
+                    conversation_id=message.conversation_id,
                     isp_duration="PT15M",
                     period=XmlDate(2023, 1, 1),
                     congestion_point="ean.123456789012",
@@ -54,6 +60,24 @@ Self-contained Aggregator service and client
                             min_activation_factor=0.5,
                         )
                     ],
+                )
+            )
+
+        def process_flex_offer_response(self, message: FlexOffer):
+            print(f"Received a message: {message}")
+
+        def process_flex_offer_revocation_response(self, message):
+            print(f"Received a message: {message}")
+
+        def process_flex_order(self, message: FlexOrder):
+            print(f"Received a message: {message}")
+
+            dso_client = self.dso_client(message.sender_domain)
+            dso_client.send_flex_order_response(
+                FlexOrderResponse(
+                    flex_order_message_id=message.message_id,
+                    conversation_id=message.conversation_id,
+                    result=AcceptedRejected.ACCEPTED
                 )
             )
 
