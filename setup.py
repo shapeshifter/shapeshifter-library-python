@@ -16,7 +16,7 @@ setup(
         "pynacl==1.5.0",
         "dnspython==2.6.1",
         "fastapi>=0.110,<=0.113",
-        "fastapi-xml==1.1.0",
+        "fastapi-xml>=1.1.1,<2.0.0",
         "requests",
         "uvicorn",
         "termcolor",
