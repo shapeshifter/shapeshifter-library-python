@@ -1,9 +1,11 @@
-import pytest
-from time import sleep
 from concurrent.futures import ThreadPoolExecutor
+from time import sleep
 
-from shapeshifter_uftp.uftp import routing_map, PayloadMessageResponse, AcceptedRejected
+import pytest
+
 from shapeshifter_uftp.service.base_service import snake_case
+from shapeshifter_uftp.uftp import AcceptedRejected, PayloadMessageResponse, routing_map
+
 from .helpers.messages import messages
 from .helpers.services import DummyAgrService, DummyCroService, DummyDsoService
 
@@ -47,8 +49,6 @@ def test_communications(message, agr_service, cro_service, dso_service):
             sending_method = f"send_{snake_case(message.__class__.__name__)}"
             main_future = executor.submit(getattr(client, sending_method), message)
 
-        assert recipient.request_futures[f"pre_process_{snake_case(message.__class__.__name__)}"].result() == message
         response_message = PayloadMessageResponse()
-        recipient.response_futures[f"pre_process_{snake_case(message.__class__.__name__)}"].set_result(response_message)
         assert recipient.request_futures[f"process_{snake_case(message.__class__.__name__)}"].result() == message
-        assert main_future.result().result == AcceptedRejected.ACCEPTED
+        assert main_future.result() is None

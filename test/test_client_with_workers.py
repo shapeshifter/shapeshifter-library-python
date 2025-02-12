@@ -1,9 +1,12 @@
-from .helpers.services import DummyAgrService, DummyCroService
-from .helpers.messages import messages_by_type
-from functools import partial
 from concurrent.futures import Future
-from shapeshifter_uftp.uftp import PayloadMessageResponse, AgrPortfolioUpdate
+from functools import partial
 from time import sleep
+
+from shapeshifter_uftp.uftp import AgrPortfolioUpdate, PayloadMessageResponse
+
+from .helpers.messages import messages_by_type
+from .helpers.services import DummyAgrService, DummyCroService
+
 
 def callback(response, future):
     future.set_result(response)
@@ -15,10 +18,8 @@ def test_client_with_workers():
                 message = messages_by_type[AgrPortfolioUpdate]
                 main_future = Future()
                 client._queue_message(message, partial(callback, future=main_future))
-                assert cro_service.request_futures["pre_process_agr_portfolio_update"].result() == message
-                response_message = PayloadMessageResponse()
-                cro_service.response_futures["pre_process_agr_portfolio_update"].set_result(PayloadMessageResponse())
-                assert isinstance(main_future.result(), PayloadMessageResponse)
+                result = main_future.result()
+                assert result is None
 
 def test_client_with_workers_retries():
     with DummyAgrService() as agr_service:
@@ -37,10 +38,7 @@ def test_client_with_workers_retries():
                 print("Left sleep")
 
                 client.recipient_endpoint = old_endpoint_url
-                assert cro_service.request_futures["pre_process_agr_portfolio_update"].result() == message
-                response_message = PayloadMessageResponse()
-                cro_service.response_futures["pre_process_agr_portfolio_update"].set_result(PayloadMessageResponse())
-                assert isinstance(main_future.result(), PayloadMessageResponse)
+                assert main_future.result() is None
 
 def test_client_with_workers_retries_never_finishes():
     with DummyAgrService() as agr_service:
@@ -57,13 +55,8 @@ def test_client_with_workers_retries_never_finishes():
 
                 sleep(2.0)
 
-                print("Left sleep")
-
                 client.recipient_endpoint = old_endpoint_url
-
-                sleep(1.0)
-                assert not cro_service.request_futures["pre_process_agr_portfolio_update"].done()
-
+                assert main_future.done() is False
 
 
 def test_client_with_workers_error_in_callback():
@@ -77,8 +70,4 @@ def test_client_with_workers_error_in_callback():
                 message = messages_by_type[AgrPortfolioUpdate]
                 main_future = Future()
                 client._queue_message(message, partial(faulty_callback, future=main_future))
-                assert cro_service.request_futures["pre_process_agr_portfolio_update"].result() == message
-                response_message = PayloadMessageResponse()
-                cro_service.response_futures["pre_process_agr_portfolio_update"].set_result(PayloadMessageResponse())
-                assert isinstance(main_future.result(), PayloadMessageResponse)
-
+                assert main_future.result() is None

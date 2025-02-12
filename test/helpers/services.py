@@ -1,11 +1,16 @@
-from shapeshifter_uftp import ShapeshifterAgrService, ShapeshifterCroService, ShapeshifterDsoService
-from concurrent.futures import Future
-from base64 import b64encode, b64decode
-from nacl.bindings import crypto_sign_keypair
-from shapeshifter_uftp.logging import logger
 import itertools
-from shapeshifter_uftp.service.base_service import snake_case
+from base64 import b64decode, b64encode
+from concurrent.futures import Future
 
+from nacl.bindings import crypto_sign_keypair
+
+from shapeshifter_uftp import (
+    ShapeshifterAgrService,
+    ShapeshifterCroService,
+    ShapeshifterDsoService,
+)
+from shapeshifter_uftp.logging import logger
+from shapeshifter_uftp.service.base_service import snake_case
 
 AGR_DOMAIN = "agr.dev"
 CRO_DOMAIN = "cro.dev"
@@ -52,7 +57,7 @@ class DummyAgrService(ShapeshifterAgrService):
         self.request_futures = {
             f"{stage}_{name}": Future()
             for stage, name in itertools.product(
-                ["pre_process", "process"],
+                ["process"],
                 [
                     name
                     for name in [
@@ -63,80 +68,32 @@ class DummyAgrService(ShapeshifterAgrService):
             )
         }
 
-        self.response_futures = {
-            name: Future()
-            for name in [
-                f"pre_process_{snake_case(message.__name__)}"
-                for message in self.acceptable_messages
-            ]
-        }
-
-    def pre_process_flex_request(self, message):
-        self.request_futures["pre_process_flex_request"].set_result(message)
-        return self.response_futures["pre_process_flex_request"].result()
-
     def process_flex_request(self, message):
         self.request_futures["process_flex_request"].set_result(message)
-
-    def pre_process_flex_order(self, message):
-        self.request_futures["pre_process_flex_order"].set_result(message)
-        return self.response_futures["pre_process_flex_order"].result()
 
     def process_flex_order(self, message):
         self.request_futures["process_flex_order"].set_result(message)
 
-    def pre_process_flex_reservation_update(self, message):
-        self.request_futures["pre_process_flex_reservation_update"].set_result(message)
-        return self.response_futures["pre_process_flex_reservation_update"].result()
-
     def process_flex_reservation_update(self, message):
         self.request_futures["process_flex_reservation_update"].set_result(message)
-
-    def pre_process_flex_settlement(self, message):
-        self.request_futures["pre_process_flex_settlement"].set_result(message)
-        return self.response_futures["pre_process_flex_settlement"].result()
 
     def process_flex_settlement(self, message):
         self.request_futures["process_flex_settlement"].set_result(message)
 
-    def pre_process_flex_offer_revocation_response(self, message):
-        self.request_futures["pre_process_flex_offer_revocation_response"].set_result(message)
-        return self.response_futures["pre_process_flex_offer_revocation_response"].result()
-
     def process_flex_offer_revocation_response(self, message):
         self.request_futures["process_flex_offer_revocation_response"].set_result(message)
-
-    def pre_process_agr_portfolio_query_response(self, message):
-        self.request_futures["pre_process_agr_portfolio_query_response"].set_result(message)
-        return self.response_futures["pre_process_agr_portfolio_query_response"].result()
 
     def process_agr_portfolio_query_response(self, message):
         self.request_futures["process_agr_portfolio_query_response"].set_result(message)
 
-    def pre_process_agr_portfolio_update_response(self, message):
-        self.request_futures["pre_process_agr_portfolio_update_response"].set_result(message)
-        return self.response_futures["pre_process_agr_portfolio_update_response"].result()
-
     def process_agr_portfolio_update_response(self, message):
         self.request_futures["process_agr_portfolio_update_response"].set_result(message)
-
-    def pre_process_d_prognosis_response(self, message):
-        self.request_futures["pre_process_d_prognosis_response"].set_result(message)
-        return self.response_futures["pre_process_d_prognosis_response"].result()
 
     def process_d_prognosis_response(self, message):
         self.request_futures["process_d_prognosis_response"].set_result(message)
 
-    def pre_process_flex_offer_response(self, message):
-        self.request_futures["pre_process_flex_offer_response"].set_result(message)
-        return self.response_futures["pre_process_flex_offer_response"].result()
-
     def process_flex_offer_response(self, message):
         self.request_futures["process_flex_offer_response"].set_result(message)
-
-    def pre_process_metering_response(self, message):
-        self.request_futures["pre_process_metering_response"].set_result(message)
-        return self.response_futures["pre_process_metering_response"].result()
 
     def process_metering_response(self, message):
         self.request_futures["process_metering_response"].set_result(message)
@@ -175,32 +132,16 @@ class DummyCroService(ShapeshifterCroService):
             ]
         }
 
-    def pre_process_agr_portfolio_query(self, message):
-        logger.info("Dummy Service: got AGR Portfolio Query")
-        self.request_futures["pre_process_agr_portfolio_query"].set_result(message)
-        logger.info("Dummy CRO Service: waiting for result")
-        return self.response_futures["pre_process_agr_portfolio_query"].result()
-
     def process_agr_portfolio_query(self, message):
         self.request_futures["process_agr_portfolio_query"].set_result(message)
 
-    def pre_process_agr_portfolio_update(self, message):
-        self.request_futures["pre_process_agr_portfolio_update"].set_result(message)
-        return self.response_futures["pre_process_agr_portfolio_update"].result()
 
     def process_agr_portfolio_update(self, message):
         self.request_futures["process_agr_portfolio_update"].set_result(message)
 
-    def pre_process_dso_portfolio_query(self, message):
-        self.request_futures["pre_process_dso_portfolio_query"].set_result(message)
-        return self.response_futures["pre_process_dso_portfolio_query"].result()
-
     def process_dso_portfolio_query(self, message):
         self.request_futures["process_dso_portfolio_query"].set_result(message)
 
-    def pre_process_dso_portfolio_update(self, message):
-        self.request_futures["pre_process_dso_portfolio_update"].set_result(message)
-        return self.response_futures["pre_process_dso_portfolio_update"].result()
 
     def process_dso_portfolio_update(self, message):
         self.request_futures["process_dso_portfolio_update"].set_result(message)
@@ -239,72 +180,32 @@ class DummyDsoService(ShapeshifterDsoService):
             ]
         }
 
-    def pre_process_flex_offer(self, message):
-        self.request_futures["pre_process_flex_offer"].set_result(message)
-        return self.response_futures["pre_process_flex_offer"].result()
-
     def process_flex_offer(self, message):
         self.request_futures["process_flex_offer"].set_result(message)
-
-    def pre_process_flex_order_response(self, message):
-        self.request_futures["pre_process_flex_order_response"].set_result(message)
-        return self.response_futures["pre_process_flex_order_response"].result()
 
     def process_flex_order_response(self, message):
         self.request_futures["process_flex_order_response"].set_result(message)
 
-    def pre_process_d_prognosis(self, message):
-        self.request_futures["pre_process_d_prognosis"].set_result(message)
-        return self.response_futures["pre_process_d_prognosis"].result()
-
     def process_d_prognosis(self, message):
         self.request_futures["process_d_prognosis"].set_result(message)
-
-    def pre_process_flex_offer_revocation(self, message):
-        self.request_futures["pre_process_flex_offer_revocation"].set_result(message)
-        return self.response_futures["pre_process_flex_offer_revocation"].result()
 
     def process_flex_offer_revocation(self, message):
         self.request_futures["process_flex_offer_revocation"].set_result(message)
 
-    def pre_process_flex_settlement_response(self, message):
-        self.request_futures["pre_process_flex_settlement_response"].set_result(message)
-        return self.response_futures["pre_process_flex_settlement_response"].result()
-
     def process_flex_settlement_response(self, message):
         self.request_futures["process_flex_settlement_response"].set_result(message)
-
-    def pre_process_dso_portfolio_update_response(self, message):
-        self.request_futures["pre_process_dso_portfolio_update_response"].set_result(message)
-        return self.response_futures["pre_process_dso_portfolio_update_response"].result()
 
     def process_dso_portfolio_update_response(self, message):
         self.request_futures["process_dso_portfolio_update_response"].set_result(message)
 
-    def pre_process_dso_portfolio_query_response(self, message):
-        self.request_futures["pre_process_dso_portfolio_query_response"].set_result(message)
-        return self.response_futures["pre_process_dso_portfolio_query_response"].result()
-
     def process_dso_portfolio_query_response(self, message):
         self.request_futures["process_dso_portfolio_query_response"].set_result(message)
-
-    def pre_process_flex_request_response(self, message):
-        self.request_futures["pre_process_flex_request_response"].set_result(message)
-        return self.response_futures["pre_process_flex_request_response"].result()
 
     def process_flex_request_response(self, message):
         self.request_futures["process_flex_request_response"].set_result(message)
 
-    def pre_process_flex_reservation_update_response(self, message):
-        self.request_futures["pre_process_flex_reservation_update_response"].set_result(message)
-        return self.response_futures["pre_process_flex_reservation_update_response"].result()
-
     def process_flex_reservation_update_response(self, message):
         self.request_futures["process_flex_reservation_update_response"].set_result(message)
-
-    def pre_process_metering(self, message):
-        self.request_futures["pre_process_metering"].set_result(message)
-        return self.response_futures["pre_process_metering"].result()
 
     def process_metering(self, message):
         self.request_futures["process_metering"].set_result(message)

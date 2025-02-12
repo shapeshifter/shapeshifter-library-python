@@ -1,19 +1,22 @@
-from .helpers.services import DummyAgrService, DummyCroService
-from .helpers.messages import messages_by_type
-from shapeshifter_uftp.uftp import FlexRequestResponse, AcceptedRejected, SignedMessage, AgrPortfolioUpdate, PayloadMessageResponse
-from shapeshifter_uftp.transport import seal_message, unseal_message, to_xml, from_xml
+from base64 import b64decode, b64encode
+
+import pytest
 import requests
 from nacl.bindings import crypto_sign
-from base64 import b64encode, b64decode
 
+from shapeshifter_uftp.exceptions import ClientTransportException
+from shapeshifter_uftp.transport import from_xml, seal_message, to_xml, unseal_message
+from shapeshifter_uftp.uftp import (
+    AcceptedRejected,
+    AgrPortfolioUpdate,
+    FlexOffer,
+    FlexRequestResponse,
+    PayloadMessageResponse,
+    SignedMessage,
+)
 
-def test_unacceptable_message():
-    with DummyCroService() as cro_service:
-        agr_service = DummyAgrService()
-        with agr_service.cro_client(cro_service.sender_domain) as client:
-            response = client._send_message(messages_by_type[FlexRequestResponse])
-            assert response.result == AcceptedRejected.REJECTED
-            assert response.rejection_reason == "Invalid Message: 'FlexRequestResponse'"
+from .helpers.messages import messages_by_type
+from .helpers.services import DummyAgrService, DummyCroService
 
 
 def test_sender_mismatch():
@@ -21,8 +24,10 @@ def test_sender_mismatch():
     Send a message with mismatching sender_domain in the outer
     envelope and the inner PayloadMessage.
     """
-    with DummyCroService() as cro_service:
-        agr_service = DummyAgrService()
+    with (
+        DummyCroService() as cro_service,
+        DummyAgrService() as agr_service
+    ):
         with agr_service.cro_client(cro_service.sender_domain) as client:
             message = messages_by_type[AgrPortfolioUpdate]
             message.sender_domain = "fake.domain"
@@ -40,10 +45,8 @@ def test_sender_mismatch():
                 headers={"Content-Type": "text/xml"},
                 data=to_xml(signed_message)
             )
-
             assert response.status_code == 200
-            sealed_response_message = from_xml(response.content)
-            unsealed_response_message = unseal_message(sealed_response_message.body, client.recipient_signing_key)
+            unsealed_response_message = agr_service.request_futures["process_agr_portfolio_update_response"].result(timeout=10)
             assert unsealed_response_message.result == AcceptedRejected.REJECTED
             assert unsealed_response_message.rejection_reason == 'Invalid Sender'
 
@@ -71,16 +74,3 @@ def test_transport_error():
             )
 
             assert response.status_code == 400
-
-
-def test_error_during_post_process():
-    def faulty_post_process(self, message):
-        raise ValueError("BOOM")
-
-    with DummyCroService() as cro_service:
-        agr_service = DummyAgrService()
-        cro_service.process_agr_portfolio_update = faulty_post_process
-        cro_service.response_futures["pre_process_agr_portfolio_update"].set_result(PayloadMessageResponse())
-        with agr_service.cro_client(cro_service.sender_domain) as client:
-            result = client.send_agr_portfolio_update(messages_by_type[AgrPortfolioUpdate])
-            assert result.result == AcceptedRejected.ACCEPTED

@@ -6,26 +6,7 @@ Communication Structure
 
 This library provides all the parts you need to build a Shapeshifter-compliant participant.
 
-Each request is a subclass of :code:`PayloadMessage`, and the receiving party responds using a :code:`PayloadMessageResponse`. The PayloadMessageResponse is merely an indication whether the message was accepted, technically. In shapeshifter-UFTP this is called the **pre-processing** of a request, and this step happens synchronously inside the HTTP Request context. A typical pre-processing step might look like this:
-
-.. code-block:: python3
-
-    from shapeshifter_uftp import (
-        ShapeshifterAgrService,
-        AcceptedRejected,
-        FlexRequest,
-        PayloadMessageResponse
-    )
-
-    class MyAggregatorService(ShapeshifterAgrService):
-
-        ...
-
-        def pre_process_flex_request(self, message: FlexRequest) -> PayloadMessageResponse:
-            return PayloadMessagesResponse(result=AcceptedRejected.ACCEPTED)
-
-        ...
-
+Each request is a subclass of :code:`PayloadMessage`. The python library performs some checks on the validity of the message, and responds with an appropriate HTTP status code. If the message was valid, it is then handed to one of your functions, so that you can send the response to this message.
 
 After receiving the message, the receiving party usually wants to send an actual response of some kind. For instance, a :code:`FlexRequest` message from the Distribution System Operator DSO might be replied to using a :code:`FlexOffer` message from the Aggregator (AGR). In shapeshifter-uftp this is called the **processing** step, and happens separately from the request context. A typical post-processing step might look like this:
 
@@ -43,9 +24,6 @@ After receiving the message, the receiving party usually wants to send an actual
 
         ...
 
-        def pre_process_flex_request(self, message: FlexRequest) -> PayloadMessageResponse:
-            return PayloadMessagesResponse(result=AcceptedRejected.ACCEPTED)
-
         def process_flex_request(self, message: FlexRequest):
             # Do some work to determine what flexibility we can offer to the DSO
             available_flex = my_backend.get_available_flexibility(...)
@@ -62,42 +40,42 @@ This pattern repeats for all the messages that are exchanged between the partici
 **Aggregator (AGR) Service:**
 
 - Messages from the DSO:
-    - :code:`(pre_)process_d_prognosis_response`
-    - :code:`(pre_)process_flex_request`
-    - :code:`(pre_)process_flex_offer_response`
-    - :code:`(pre_)process_flex_offer_revocation_response`
-    - :code:`(pre_)process_flex_order`
-    - :code:`(pre_)process_flex_reservation_update`
-    - :code:`(pre_)process_flex_settlement`
-    - :code:`(pre_)process_metering_response`
+    - :code:`process_d_prognosis_response`
+    - :code:`process_flex_request`
+    - :code:`process_flex_offer_response`
+    - :code:`process_flex_offer_revocation_response`
+    - :code:`process_flex_order`
+    - :code:`process_flex_reservation_update`
+    - :code:`process_flex_settlement`
+    - :code:`process_metering_response`
 - Messages from the CRO:
-    - :code:`(pre_)process_agr_portfolio_query_response`
-    - :code:`(pre_)process_agr_portfolio_update_response`
+    - :code:`process_agr_portfolio_query_response`
+    - :code:`process_agr_portfolio_update_response`
 
 **Common Reference Operator (CRO) Service:**
 
 - Messages from the Aggregator
-    - :code:`(pre_)process_agr_portfolio_query`
-    - :code:`(pre_)process_agr_portfolio_update`
+    - :code:`process_agr_portfolio_query`
+    - :code:`process_agr_portfolio_update`
 - Messages from the DSO
-    - :code:`(pre_)process_dso_portfolio_query`
-    - :code:`(pre_)process_dso_portfolio_update`
+    - :code:`process_dso_portfolio_query`
+    - :code:`process_dso_portfolio_update`
 
 
 **Distribution System Operator (DSO) Service:**
 
 - Messages from the Aggregator:
-    - :code:`(pre_)process_d_prognosis`
-    - :code:`(pre_)process_flex_request_response`
-    - :code:`(pre_)process_flex_offer`
-    - :code:`(pre_)process_flex_order_response`
-    - :code:`(pre_)process_flex_offer_revocation`
-    - :code:`(pre_)process_flex_reservation_update_response`
-    - :code:`(pre_)process_flex_settlement_response`
-    - :code:`(pre_)process_metering`
+    - :code:`process_d_prognosis`
+    - :code:`process_flex_request_response`
+    - :code:`process_flex_offer`
+    - :code:`process_flex_order_response`
+    - :code:`process_flex_offer_revocation`
+    - :code:`process_flex_reservation_update_response`
+    - :code:`process_flex_settlement_response`
+    - :code:`process_metering`
 - Messages from the CRO:
-    - :code:`(pre_)process_dso_portfolio_query_response`
-    - :code:`(pre_)process_dso_portfolio_update_response`
+    - :code:`process_dso_portfolio_query_response`
+    - :code:`process_dso_portfolio_update_response`
 
 
 Identification of participants

@@ -6,7 +6,7 @@ from time import sleep
 from uuid import uuid4
 
 import uvicorn
-from fastapi import FastAPI
+from fastapi import FastAPI, Response
 from fastapi.exceptions import HTTPException
 from fastapi_xml import XmlAppResponse, XmlRoute
 
@@ -24,6 +24,7 @@ from ..uftp import (
     PayloadMessage,
     PayloadMessageResponse,
     SignedMessage,
+    request_response_map,
 )
 
 
@@ -92,7 +93,7 @@ class ShapeshifterService():
         self.app.router.add_api_route(
             path,
             endpoint=self._receive_message,
-            response_model=SignedMessage,
+            response_model=None,
             methods=["POST"],
             status_code=200,
         )
@@ -105,6 +106,7 @@ class ShapeshifterService():
 
         # Create an inbound executor worker
         self.inbound_executor = ThreadPoolExecutor(max_workers=self.num_inbound_threads)
+        self.outbound_executor = ThreadPoolExecutor(max_workers=self.num_outbound_threads)
 
 
     def run(self):
@@ -139,7 +141,7 @@ class ShapeshifterService():
     #              Shapeshifter UFTP implementation.               #
     # ------------------------------------------------------------ #
 
-    def _receive_message(self, message: SignedMessage) -> SignedMessage:
+    def _receive_message(self, message: SignedMessage) -> None:
         """
         The default entrypoint for the route. This will unpack the
         message and validate the signature. It will thes pass the
@@ -180,46 +182,14 @@ class ShapeshifterService():
             raise HTTPException(err.http_status_code) from err
 
         except FunctionalException as err:
-            response = PayloadMessageResponse(
-                result = AcceptedRejected.REJECTED,
-                rejection_reason = err.rejection_reason
-            )
+            self.outbound_executor.submit(self._reject_message, message, unsealed_message, err.rejection_reason)
 
         else:
             # If the initial checks passed, process the message in the
             # user-defined pipeline.
-            response = self._pre_process_message(unsealed_message)
-            if response.result == AcceptedRejected.ACCEPTED:
-                self.inbound_executor.submit(self._process_message, unsealed_message)
+            self.inbound_executor.submit(self._process_message, unsealed_message)
 
-        # Add the default parameters to the PayloadMessageResponse.
-        response.version = self.protocol_version
-        response.sender_domain = self.sender_domain
-        response.recipient_domain = message.sender_domain
-        response.time_stamp = response.time_stamp or datetime.now(timezone.utc).isoformat()
-        response.message_id = response.message_id or str(uuid4())
-        response.conversation_id = unsealed_message.conversation_id
-        response.reference_message_id = unsealed_message.message_id
-
-        # Pack up the sealed message blob inside a SignedMessage
-        # envelope. We attach our sender domain and role so that the
-        # other side can look up the relevent keys for opening the
-        # message.
-        sealed_message = transport.seal_message(response, self.signing_key)
-        return SignedMessage(
-            sender_domain = self.sender_domain,
-            sender_role = self.sender_role,
-            body = sealed_message,
-        )
-
-    def _pre_process_message(self, message: PayloadMessage) -> PayloadMessageResponse:
-        """
-        Find the relevant pre-processing method to handle the HTTP
-        request for the given message, and return its result.
-        """
-        pre_process_method_name = f"pre_process_{snake_case(message.__class__.__name__)}"
-        pre_process_method = getattr(self, pre_process_method_name)
-        return pre_process_method(message)
+        return Response(status_code=200)
 
     def _process_message(self, message: PayloadMessage):
         """
@@ -251,6 +221,27 @@ class ShapeshifterService():
             recipient_endpoint = recipient_endpoint,
             recipient_signing_key = recipient_signing_key
         )
+
+    def _reject_message(self, message, unsealed_message, reason):
+        """
+        Send a rejection to the sending party.
+        """
+        if type(unsealed_message) not in request_response_map:
+            return
+
+        client = self._get_client(message.sender_domain, message.sender_role)
+        response_type = request_response_map[type(unsealed_message)]
+        response_id_field = snake_case(type(unsealed_message).__name__) + "_message_id"
+        message_contents = {
+            "recipient_domain": message.sender_domain,
+            "conversation_id": unsealed_message.conversation_id,
+            "result": AcceptedRejected.REJECTED,
+            "rejection_reason": reason,
+            response_id_field: unsealed_message.message_id
+        }
+        response_message = response_type(**message_contents)
+        client._send_message(response_message)
+
 
     def __enter__(self):
         """

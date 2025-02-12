@@ -31,63 +31,25 @@ class ShapeshifterCroService(ShapeshifterService, ABC):
     #       Methods related to Agr Portfolio Query messages        #
     # ------------------------------------------------------------ #
 
-    def pre_process_agr_portfolio_query(
-        self, message: AgrPortfolioQuery  # pylint: disable=unused-argument
-    ) -> PayloadMessageResponse:
+    @abstractmethod
+    def process_agr_portfolio_query(self, message: AgrPortfolioQuery):
         """
         The AGRPortfolioQuery is used by the AGR to retrieve
         additional information on the connections.
         """
-        return PayloadMessageResponse(result=AcceptedRejected.ACCEPTED)
-
-    @abstractmethod
-    def process_agr_portfolio_query(self, message: AgrPortfolioQuery):
-        """
-        This method is called after the agr_portfolio_query method is
-        completed. It gives you the chance to perform longer-running
-        operations outside of the request context.
-        """
-
-    # ------------------------------------------------------------ #
-    #       Methods related to Agr Portfolio Update messages       #
-    # ------------------------------------------------------------ #
-
-    def pre_process_agr_portfolio_update(
-        self, message: AgrPortfolioUpdate  # pylint: disable=unused-argument
-    ) -> PayloadMessageResponse:
-        """
-        The AGRPortfolioUpdate is used by the AGR to indicate on which
-        Connections it represents prosumers.
-        """
-        return PayloadMessageResponse(result=AcceptedRejected.ACCEPTED)
 
     @abstractmethod
     def process_agr_portfolio_update(self, message: AgrPortfolioUpdate):
         """
-        This method is called after the agr_portfolio_update method is
-        completed. It gives you the chance to perform longer-running
-        operations outside of the request context.
+        The AGRPortfolioUpdate is used by the AGR to indicate on which
+        Connections it represents prosumers.
         """
-
-    # ------------------------------------------------------------ #
-    #       Methods related to DSO Portfolie Query messages        #
-    # ------------------------------------------------------------ #
-
-    def pre_process_dso_portfolio_query(
-        self, message: DsoPortfolioQuery  # pylint: disable=unused-argument
-    ) -> PayloadMessageResponse:
-        """
-        DSOPortfolioQuery is used by DSOs to discover which AGRs represent
-        connections on its registered congestion point(s).
-        """
-        return PayloadMessageResponse(result=AcceptedRejected.ACCEPTED)
 
     @abstractmethod
     def process_dso_portfolio_query(self, message: DsoPortfolioQuery):
         """
-        This method is called after the dso_portfolio_query method is
-        completed. It gives you the chance to perform longer-running
-        operations outside of the request context.
+        DSOPortfolioQuery is used by DSOs to discover which AGRs represent
+        connections on its registered congestion point(s).
 
         You should end this method by sending a
         DsoPortfolioQueryResponse back to the DSO::
@@ -96,25 +58,11 @@ class ShapeshifterCroService(ShapeshifterService, ABC):
                 client.send_portfolio_query_response
         """
 
-    # ------------------------------------------------------------ #
-    #       Methods related to DSO Portfolio Query messages        #
-    # ------------------------------------------------------------ #
-
-    def pre_process_dso_portfolio_update(
-        self, message: DsoPortfolioUpdate  # pylint: disable=unused-argument
-    ) -> PayloadMessageResponse:
-        """
-        The DSOPortfolioUpdate is used by the DSO to indicate on which
-        congestion points it wants to engage in flexibility trading.
-        """
-        return PayloadMessageResponse(result=AcceptedRejected.ACCEPTED)
-
     @abstractmethod
     def process_dso_portfolio_update(self, message: DsoPortfolioUpdate):
         """
-        This method is called after the dso_portfolio_update method is
-        completed. It gives you the chance to perform longer-running
-        operations outside of the request context.
+        The DSOPortfolioUpdate is used by the DSO to indicate on which
+        congestion points it wants to engage in flexibility trading.
         """
 
     # ------------------------------------------------------------ #
