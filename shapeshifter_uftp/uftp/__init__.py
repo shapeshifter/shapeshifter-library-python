@@ -1,74 +1,5 @@
-from .agr_cro import (
-    AgrPortfolioQuery,
-    AgrPortfolioQueryResponse,
-    AgrPortfolioQueryResponseCongestionPoint,
-    AgrPortfolioQueryResponseConnection,
-    AgrPortfolioQueryResponseDSOPortfolio,
-    AgrPortfolioQueryResponseDSOView,
-    AgrPortfolioUpdate,
-    AgrPortfolioUpdateConnection,
-    AgrPortfolioUpdateResponse,
-)
-from .agr_dso import (
-    ContractSettlement,
-    ContractSettlementISP,
-    ContractSettlementPeriod,
-    DPrognosis,
-    DPrognosisISP,
-    DPrognosisResponse,
-    FlexMessage,
-    FlexOffer,
-    FlexOfferOption,
-    FlexOfferOptionISP,
-    FlexOfferResponse,
-    FlexOfferRevocation,
-    FlexOfferRevocationResponse,
-    FlexOrder,
-    FlexOrderISP,
-    FlexOrderResponse,
-    FlexOrderSettlement,
-    FlexOrderSettlementISP,
-    FlexOrderSettlementStatus,
-    FlexOrderStatus,
-    FlexRequest,
-    FlexRequestISP,
-    FlexRequestResponse,
-    FlexReservationUpdate,
-    FlexReservationUpdateISP,
-    FlexReservationUpdateResponse,
-    FlexSettlement,
-    FlexSettlementResponse,
-)
-from .common import (
-    AcceptedDisputed,
-    AcceptedRejected,
-    AvailableRequested,
-    PayloadMessage,
-    PayloadMessageResponse,
-    RedispatchBy,
-    SignedMessage,
-    TestMessage,
-    TestMessageResponse,
-    UsefRole,
-)
-from .cro_dso import (
-    DsoPortfolioQuery,
-    DsoPortfolioQueryCongestionPoint,
-    DsoPortfolioQueryConnection,
-    DsoPortfolioQueryResponse,
-    DsoPortfolioUpdate,
-    DsoPortfolioUpdateCongestionPoint,
-    DsoPortfolioUpdateConnection,
-    DsoPortfolioUpdateResponse,
-)
-from .metering import (
-    Metering,
-    MeteringISP,
-    MeteringProfile,
-    MeteringProfileEnum,
-    MeteringResponse,
-    MeteringUnit,
-)
+from .enums import *
+from .messages import *
 
 ACCEPTED = AcceptedRejected.ACCEPTED
 REJECTED = AcceptedRejected.REJECTED
@@ -162,7 +93,22 @@ routing_map = {
     FlexSettlementResponse: ("AGR", "DSO"),
     Metering: ("AGR", "DSO"),
     MeteringResponse: ("DSO", "AGR"),
+}
 
+request_response_map = {
+    AgrPortfolioQuery: AgrPortfolioQueryResponse,
+    AgrPortfolioUpdate: AgrPortfolioUpdateResponse,
+    DPrognosis: DPrognosisResponse,
+    DsoPortfolioQuery: DsoPortfolioQueryResponse,
+    DsoPortfolioUpdate: DsoPortfolioUpdateResponse,
+    FlexOffer: FlexOfferResponse,
+    FlexOfferRevocation: FlexOfferRevocationResponse,
+    FlexOrder: FlexOrderResponse,
+    FlexRequest: FlexRequestResponse,
+    FlexReservationUpdate: FlexReservationUpdateResponse,
+    FlexSettlement: FlexSettlementResponse,
+    Metering: MeteringResponse,
+    TestMessage: TestMessageResponse,
 }
 
 origin_map = {key: origin for key, (origin, destination) in routing_map.items()}

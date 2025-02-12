@@ -1,7 +1,9 @@
-from uuid import uuid4
 from datetime import datetime, timezone
-from shapeshifter_uftp.uftp import *
+from uuid import uuid4
+
 from xsdata.models.datatype import XmlDate
+
+from shapeshifter_uftp.uftp import *
 
 default_args = {
     "version": "3.0.0",

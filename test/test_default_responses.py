@@ -1,9 +1,14 @@
 import pytest
 
-from shapeshifter_uftp.uftp import routing_map, PayloadMessageResponse, AcceptedRejected
 from shapeshifter_uftp.service.base_service import snake_case
+from shapeshifter_uftp.uftp import AcceptedRejected, PayloadMessageResponse, routing_map
+
 from .helpers.messages import messages
-from .helpers.services import DefaultResponseAgrService, DefaultResponseCroService, DefaultResponseDsoService
+from .helpers.services import (
+    DefaultResponseAgrService,
+    DefaultResponseCroService,
+    DefaultResponseDsoService,
+)
 
 
 # These fixtures allow us to only start up the services once and use
@@ -47,5 +52,4 @@ def test_default_responses(message, default_agr_service, default_cro_service, de
     client = getattr(sender, client_method)(recipient.sender_domain)
     response = getattr(client, sending_method)(message)
 
-    assert type(response) == PayloadMessageResponse
-    assert response.result == AcceptedRejected.ACCEPTED
+    assert response is None

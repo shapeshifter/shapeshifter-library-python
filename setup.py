@@ -7,15 +7,16 @@ setup(
     description="Allows connections between DSO, AGR and CRO using the Shapeshifter (UFTP) protocol.",
     packages=[
         "shapeshifter_uftp",
-        "shapeshifter_uftp.uftp",
         "shapeshifter_uftp.client",
         "shapeshifter_uftp.service",
+        "shapeshifter_uftp.uftp",
+        "shapeshifter_uftp.uftp.messages"
     ],
     install_requires=[
         "xsdata[lxml]>=24.4,<=24.7",
         "pynacl==1.5.0",
         "dnspython==2.6.1",
-        "fastapi>=0.110,<=0.113",
+        "fastapi>=0.110,<0.113",
         "fastapi-xml==1.1.0",
         "requests",
         "uvicorn",

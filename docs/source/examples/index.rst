@@ -146,28 +146,3 @@ Self-contained Aggregator service and client
             except:
                 aggregator.stop()
                 break
-
-
-Pre-processing messages
------------------------
-
-By default, Shapeshifter-UFTP will do basic message and schema validations on incoming messages, and send an ``ACCEPTED`` response back to the requesting participant as the initial HTTP response. Your ``process_*`` handler is then called separately so that you can do longer-running processing in the background and optionally send a new message to the participant.
-
-If you want to override the initial response, you can implement a `pre_process_*` method for the specific messages you want to pre-process. This method should then return a PayloadMessageRseponse object that contains thet status. If your method returns a PayloadMessageResponse with status REJECTED, the normal `process_*` method will not be called for that message.
-
-Example:
-
-.. code-block:: python3
-
-    class MyAggregatorService(ShapeshifterAggregatorService):
-
-        ...
-
-        def pre_process_flex_reservation_update(self, message: FlexReservationUpdate):
-            return PayloadMessageResponse(
-                result=REJECTED,
-                rejection_reason="Flex Reservation Updates are not supported"
-            )
-
-        ...
-
