@@ -6,6 +6,7 @@ from .client import (
     ShapeshifterDsoAgrClient,
     ShapeshifterDsoCroClient,
 )
+from .oauth import OAuthClient
 from .service import (
     ShapeshifterAgrService,
     ShapeshifterCroService,

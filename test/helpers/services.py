@@ -2,6 +2,7 @@ import itertools
 from base64 import b64decode, b64encode
 from concurrent.futures import Future
 
+import responses
 from nacl.bindings import crypto_sign_keypair
 
 from shapeshifter_uftp import (
@@ -45,12 +46,13 @@ def key_lookup_function(domain, role):
 
 class DummyAgrService(ShapeshifterAgrService):
 
-    def __init__(self):
+    def __init__(self, oauth_lookup_function=None):
         super().__init__(
             sender_domain=AGR_DOMAIN,
             signing_key=AGR_PRIVATE_KEY,
             key_lookup_function=key_lookup_function,
             endpoint_lookup_function=endpoint_lookup_function,
+            oauth_lookup_function=oauth_lookup_function,
             port=AGR_TEST_PORT
         )
 
@@ -273,7 +275,6 @@ class DefaultResponseCroService(ShapeshifterCroService):
 
     def process_dso_portfolio_update(self, message):
         pass
-
 
 
 class DefaultResponseDsoService(ShapeshifterDsoService):

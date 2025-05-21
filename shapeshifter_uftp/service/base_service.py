@@ -49,6 +49,7 @@ class ShapeshifterService():
         signing_key,
         key_lookup_function=None,
         endpoint_lookup_function=None,
+        oauth_lookup_function=None,
         host: str = "0.0.0.0",
         port: int = 8080,
         path="/shapeshifter/api/v3/message",
@@ -62,6 +63,9 @@ class ShapeshifterService():
         :param key_lookup_function: A callable that takes a (sender_domain, sender_role)
                                   pair and returns a full endpoint URL (str).
                                   Omit parameter to use DNS for endpoint lookup.
+        :param oauth_lookup_function: A callable that takes a (sender_domain, sender_role)
+                                      pair and returns in instance of shapeshifter_uftp.OAuthClient
+                                      if OAuth authentication is required.
         :param host: the host to bind the server to (usually 127.0.0.1 or 0.0.0.0)
         :param port: the port to bind the server to (default: 8080)
         :param path: the URL path that the server listens on (default: /shapeshifter/api/v3/message)
@@ -84,6 +88,10 @@ class ShapeshifterService():
         # that we send all messages to. If omitted, use DNS lookups
         # using well-known DNS names.
         self.endpoint_lookup_function = endpoint_lookup_function or transport.get_endpoint
+
+        # The OAuth lookup function is used to get the OAuth instance
+        # used to authenticate outgoing requests.
+        self.oauth_lookup_function = oauth_lookup_function
 
         # The FastAPI web app takes care of routing messages to the
         # (one) endpoint, and by virtue of FastAPI-XML convert the
@@ -214,12 +222,14 @@ class ShapeshifterService():
         client_cls = client_map[(self.sender_role, recipient_role)]
         recipient_endpoint = self.endpoint_lookup_function(recipient_domain, recipient_role)
         recipient_signing_key = self.key_lookup_function(recipient_domain, recipient_role)
+        oauth_client = self.oauth_lookup_function(recipient_domain, recipient_role) if self.oauth_lookup_function else None
         return client_cls(
             sender_domain = self.sender_domain,
             signing_key = self.signing_key,
             recipient_domain = recipient_domain,
             recipient_endpoint = recipient_endpoint,
-            recipient_signing_key = recipient_signing_key
+            recipient_signing_key = recipient_signing_key,
+            oauth_client = oauth_client,
         )
 
     def _reject_message(self, message, unsealed_message, reason):
