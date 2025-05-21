@@ -10,6 +10,7 @@ import requests
 from .. import transport
 from ..exceptions import ClientTransportException
 from ..logging import logger
+from ..oauth import OAuthClient, PassthroughOAuthClient
 from ..uftp import PayloadMessage, PayloadMessageResponse, SignedMessage
 
 
@@ -34,16 +35,18 @@ class ShapeshifterClient:
         recipient_domain: str,
         recipient_endpoint: str = None,
         recipient_signing_key: str = None,
+        oauth_client: OAuthClient = None,
     ):
         """
         Shapeshifter client class that allows you to initiate messages to a different party.
-        :param sender_domain: your sender domain
-        :param signing_key:   your private signing key
-        :param recipient_domain:   the domain of the recipient
-        :param recipient_endpoint: the full http endpoint URL of the recipient. If omitted,
-                                   will look up the endpoint using DNS.
-        :recipient_signing_key:    the public signing key of the recipient. If omitted, will
-                                   look up the signing key using DNS.
+        :param str sender_domain: your sender domain
+        :param str signing_key:   your private signing key
+        :param str recipient_domain:   the domain of the recipient
+        :param str recipient_endpoint: the full http endpoint URL of the recipient. If omitted,
+                                       will look up the endpoint using DNS.
+        :param str recipient_signing_key:    the public signing key of the recipient. If omitted, will
+                                              look up the signing key using DNS.
+        :param OAuthClient oauth_client: Optional OAuth client instance for using oauth to authenticate outgoing messages.
         """
         if recipient_domain is None and recipient_endpoint is None:
             raise ValueError(
@@ -66,6 +69,11 @@ class ShapeshifterClient:
         self.scheduler = sched.scheduler(time.monotonic, time.sleep)
         self.scheduler_event = Event()
         self.scheduler_thread = None
+
+        if oauth_client:
+            self.oauth_client = oauth_client
+        else:
+            self.oauth_client = PassthroughOAuthClient()
 
     def _send_message(self, message: PayloadMessage) -> PayloadMessageResponse:
         """
@@ -115,12 +123,16 @@ class ShapeshifterClient:
         logger.debug(serialized_message)
 
         # Send the request to the relevant endpoint
-        response = requests.post(
-            self.recipient_endpoint,
-            data=serialized_message,
-            headers={"Content-Type": "text/xml; charset=utf-8"},
-            timeout=self.request_timeout,
-        )
+        with self.oauth_client.ensure_authenticated():
+            response = requests.post(
+                self.recipient_endpoint,
+                data=serialized_message,
+                headers={
+                    "Content-Type": "text/xml; charset=utf-8",
+                    **self.oauth_client.auth_header
+                },
+                timeout=self.request_timeout,
+            )
         if response.status_code != 200:
             error_msg = (
                 f"Request to {self.recipient_endpoint} was not succesful: "
