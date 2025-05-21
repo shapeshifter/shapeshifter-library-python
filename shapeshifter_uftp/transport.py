@@ -58,13 +58,21 @@ def unseal_message(message: bytes, public_key: str) -> PayloadMessage:
 
     The message will be returned as a PayloadMessage object.
     """
+    if public_key is None:
+        logger.warning(
+            "When calling unseal_message, no public key was provided. "
+            "Please check that your key_lookup function returns a key."
+        )
+        raise TypeError("'public_key' must be of type 'str', not None")
     try:
         unsealed_message = crypto_sign_open(message, b64decode(public_key))
-        logger.debug(f"Incoming Message: {unsealed_message.decode()}")
+        logger.debug(f"Incoming Message: {unsealed_message.decode('utf-8')}")
         return from_xml(unsealed_message)
     except BadSignatureError as exc:
+        logger.warning(f"The XML Signature for message {message} does not match the public key {public_key}: {exc}.")
         raise InvalidSignatureException() from exc
     except (ParserError, TypeError, ValueError) as exc:
+        logger.warning(f"The incoming XML Message {message} does not conform to the XML schema: {exc}.")
         raise SchemaException(str(exc)) from exc
 
 
