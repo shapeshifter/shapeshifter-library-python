@@ -1,6 +1,6 @@
 [project]
 name = "shapeshifter_uftp"
-version = "2.0.0b2"
+version = "2.0.0"
 dependencies = [
     "xsdata[lxml]>=24.4,<=25.4",
     "pynacl==1.5.0",
