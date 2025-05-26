@@ -1,3 +1,37 @@
+[project]
+name = "shapeshifter_uftp"
+version = "2.0.0b2"
+dependencies = [
+    "xsdata[lxml]>=24.4,<=25.4",
+    "pynacl==1.5.0",
+    "dnspython==2.6.1",
+    "fastapi>=0.110,<0.116",
+    "fastapi-xml==1.1.1",
+    "requests",
+    "uvicorn",
+    "termcolor"
+]
+requires-python = ">=3.10"
+
+[dependency-groups]
+dev = [
+    "xmlschema",
+    "pytest",
+    "pytest-cov",
+    "pylint",
+    "responses",
+    "sphinx",
+    "sphinx-rtd-theme"
+]
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project.scripts]
+shapeshifter-keypair = "shapeshifter_uftp.cli:generate_signing_keypair"
+shapeshifter-lookup = "shapeshifter_uftp.cli:perform_lookup"
+
 [tool.pytest.ini_options]
 addopts = "-v --cov --cov-report html --cov-report lcov"
 
@@ -19,3 +53,12 @@ directory = "test_coverage"
 
 [tool.isort]
 profile = "black"
+
+[tool.setuptools]
+packages = [
+    "shapeshifter_uftp",
+    "shapeshifter_uftp.client",
+    "shapeshifter_uftp.service",
+    "shapeshifter_uftp.uftp",
+    "shapeshifter_uftp.uftp.messages"
+]
