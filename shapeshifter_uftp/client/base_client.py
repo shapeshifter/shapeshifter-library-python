@@ -11,6 +11,7 @@ from .. import transport
 from ..exceptions import ClientTransportException
 from ..logging import logger
 from ..uftp import PayloadMessage, PayloadMessageResponse, SignedMessage
+from shapeshifter_uftp.token_manager import AuthTokenManager
 
 
 class ShapeshifterClient:
@@ -34,6 +35,7 @@ class ShapeshifterClient:
         recipient_domain: str,
         recipient_endpoint: str = None,
         recipient_signing_key: str = None,
+        oauth_token_manager: AuthTokenManager = None,
     ):
         """
         Shapeshifter client class that allows you to initiate messages to a different party.
@@ -55,6 +57,7 @@ class ShapeshifterClient:
         self.recipient_domain = recipient_domain
         self.recipient_endpoint = recipient_endpoint
         self.recipient_signing_key = recipient_signing_key
+        self.oauth_token_manager = oauth_token_manager
 
         # The outgoing queue and scheduler are used when queueing
         # messages for delivery later. This allows the Shapeshifter
@@ -114,11 +117,23 @@ class ShapeshifterClient:
         logger.debug(f"Sending message to {self.recipient_endpoint}:")
         logger.debug(serialized_message)
 
+        # Find the right headers to use for the request. If we have
+        # an OAuth2 token manager, we will use that to get the
+        # request headers. If not, we will use the basic Content-Type
+        try:
+            if self.oauth_token_manager:
+                header = self.oauth_token_manager.get_request_headers()
+            else:
+                header = {"Content-Type": "text/xml; charset=utf-8"}
+        except Exception as e:
+            logger.warning(f"Failed to get OAuth2 headers, falling back to basic headers: {e}")
+            header = {"Content-Type": "text/xml; charset=utf-8"}
+
         # Send the request to the relevant endpoint
         response = requests.post(
             self.recipient_endpoint,
             data=serialized_message,
-            headers={"Content-Type": "text/xml; charset=utf-8"},
+            headers=header,
             timeout=self.request_timeout,
         )
         if response.status_code != 200:
