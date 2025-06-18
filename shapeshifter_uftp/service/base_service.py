@@ -25,6 +25,7 @@ from ..uftp import (
     PayloadMessageResponse,
     SignedMessage,
 )
+from ..token_manager import AuthTokenManager
 
 
 class ShapeshifterService():
@@ -46,11 +47,15 @@ class ShapeshifterService():
         self,
         sender_domain,
         signing_key,
+        oauth_token_endpoint: str = None,
+        oauth_client_id: str = None,
+        oauth_client_secret: str = None,
+        token_refresh_buffer: int = 30,
         key_lookup_function=None,
         endpoint_lookup_function=None,
         host: str = "0.0.0.0",
         port: int = 8080,
-        path="/shapeshifter/api/v3/message",
+        path="/shapeshifter/api/v3/message"
     ):
         """
         :param sender_domain: our sender domain (FQDN) that the recipient uses to look us up.
@@ -64,6 +69,9 @@ class ShapeshifterService():
         :param host: the host to bind the server to (usually 127.0.0.1 or 0.0.0.0)
         :param port: the port to bind the server to (default: 8080)
         :param path: the URL path that the server listens on (default: /shapeshifter/api/v3/message)
+        :param oauth_token_endpoint: the OAuth2 token endpoint to use for obtaining access tokens
+        :param oauth_client_id: the OAuth2 client ID to use for obtaining access tokens
+        :param oauth_client_secret: the OAuth2 client secret to use for obtaining access tokens
         """
 
         # Set the sender domain, which is used
@@ -87,6 +95,18 @@ class ShapeshifterService():
         # The FastAPI web app takes care of routing messages to the
         # (one) endpoint, and by virtue of FastAPI-XML convert the
         # python-friendly objects into XML and vice versa.
+
+        # Create Auth Manager for OAuth2 Client Credentials flow (if configured)
+        if oauth_token_endpoint and oauth_client_id and oauth_client_secret:
+            self.auth_token_manager = AuthTokenManager(
+                oauth_token_endpoint=oauth_token_endpoint,
+                oauth_client_id=oauth_client_id,
+                oauth_client_secret=oauth_client_secret,
+                token_refresh_buffer=token_refresh_buffer
+            )
+        else:
+            self.auth_token_manager = None
+
         self.app = FastAPI(default_response_class=XmlAppResponse)
         self.app.router.route_class = XmlRoute
         self.app.router.add_api_route(
@@ -249,7 +269,8 @@ class ShapeshifterService():
             signing_key = self.signing_key,
             recipient_domain = recipient_domain,
             recipient_endpoint = recipient_endpoint,
-            recipient_signing_key = recipient_signing_key
+            recipient_signing_key = recipient_signing_key,
+            oauth_token_manager = self.auth_token_manager
         )
 
     def __enter__(self):

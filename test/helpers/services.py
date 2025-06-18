@@ -36,7 +36,7 @@ def key_lookup_function(domain, role):
         return CRO_PUBLIC_KEY
     elif domain == "dso.dev":
         return DSO_PUBLIC_KEY
-
+    
 
 class DummyAgrService(ShapeshifterAgrService):
 
