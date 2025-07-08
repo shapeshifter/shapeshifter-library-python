@@ -236,7 +236,10 @@ Version History
 +-------------+-------------------+----------------------------------+
 | Version     | Release Date      | Release Notes                    |
 +=============+===================+==================================+
-| 2.0.0       | 2025-05-21        | Support for OAuth 2 on outgoing  |
+| 2.0.1       | 2025-07-08        | Bumped fastapi-xml depedency     |
+|             |                   | version.                         |
++-------------+-------------------+----------------------------------+
+| 2.0.0       | 2025-07-08        | Support for OAuth 2 on outgoing  |
 |             |                   | messages, updated dependencies   |
 +-------------+-------------------+----------------------------------+
 | 1.2.0       | 2024-04-04        | Upgrade to latest FastAPI and    |
