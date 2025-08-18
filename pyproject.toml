@@ -5,7 +5,7 @@ dependencies = [
     "xsdata[lxml]>=24.4,<=25.4",
     "pynacl==1.5.0",
     "dnspython==2.6.1",
-    "fastapi>=0.110,<0.116",
+    "fastapi>=0.110,<0.117",
     "fastapi-xml>=1.1.1,<2.0.0",
     "requests",
     "uvicorn",
