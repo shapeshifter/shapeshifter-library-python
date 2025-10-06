@@ -1,9 +1,11 @@
-from base64 import b64encode, b64decode
-from datetime import datetime, timezone
-from nacl.bindings import crypto_sign_keypair, crypto_sign, crypto_sign_open
-import pytest
 import re
-from socket import socket
+from base64 import b64encode
+from datetime import datetime, timezone
+from unittest.mock import patch
+
+import dns.resolver
+import pytest
+from nacl.bindings import crypto_sign, crypto_sign_keypair
 
 from shapeshifter_uftp import TestMessage as UFTPTestMessage
 from shapeshifter_uftp.transport import seal_message, unseal_message, get_key
@@ -57,6 +59,11 @@ def test_seal_invalid_type():
     with pytest.raises(TypeError):
         sealed = seal_message(msg, private_base64)
 
+
+def patched_resolve(*args, **kwargs):
+    return dns.resolver.resolve_at("1.1.1.1", *args, **kwargs)
+
+@patch.object(dns.resolver, 'resolve', new=patched_resolve)
 def test_get_key():
     key = get_key("enexis.dev", "dso")
     assert re.match(r'[0-9A-Za-z+/=]{44}', key)

@@ -25,8 +25,8 @@ class ShapeshifterClient:
     num_outgoing_workers = 10
     num_delivery_attempts = 10
     request_timeout = 30
-    exponential_retry_factor = 1
-    exponential_retry_base = 2
+    exponential_retry_factor = 1.0
+    exponential_retry_base = 2.0
 
     def __init__(
         self,
