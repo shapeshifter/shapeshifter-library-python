@@ -34,7 +34,7 @@ class PayloadMessage:
     """
 
     version: Optional[str] = field(
-        default="3.0.0",
+        default="3.1.0",
         metadata={
             "name": "Version",
             "type": "Attribute",

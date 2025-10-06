@@ -21,7 +21,6 @@ class ShapeshifterClient:
 
     sender_role: str
     recipient_role: str
-    protocol_version = "3.0.0"
     num_outgoing_workers = 10
     num_delivery_attempts = 10
     request_timeout = 30
@@ -36,6 +35,7 @@ class ShapeshifterClient:
         recipient_endpoint: str = None,
         recipient_signing_key: str = None,
         oauth_client: OAuthClient = None,
+        version: str = "3.1.0"
     ):
         """
         Shapeshifter client class that allows you to initiate messages to a different party.
@@ -47,12 +47,17 @@ class ShapeshifterClient:
         :param str recipient_signing_key:    the public signing key of the recipient. If omitted, will
                                               look up the signing key using DNS.
         :param OAuthClient oauth_client: Optional OAuth client instance for using oauth to authenticate outgoing messages.
+        :param str version: Version number for the shapeshfter protocol (3.0.0 or 3.1.0)
         """
         if recipient_domain is None and recipient_endpoint is None:
             raise ValueError(
                 "One of recipient_domain or recipient_endpoint must be provided."
             )
 
+        if version not in ("3.0.0", "3.1.0"):
+            raise ValueError(f"'version' should be one of '3.0.0' or '3.1.0', not '{version}'")
+
+        self.version = version
         self.sender_domain = sender_domain
         self.signing_key = signing_key
         self.recipient_domain = recipient_domain
@@ -94,7 +99,7 @@ class ShapeshifterClient:
         # every time they create any message, in order to reduce the
         # duplicated code that would result in, and all of these
         # properties can be calculated in the framework anyway.
-        message.version = self.protocol_version
+        message.version = self.version
         message.sender_domain = self.sender_domain
         message.sender_role = self.sender_role
         message.recipient_domain = self.recipient_domain

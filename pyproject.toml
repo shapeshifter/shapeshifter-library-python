@@ -1,6 +1,7 @@
 [project]
 name = "shapeshifter_uftp"
-version = "2.0.1"
+version = "2.1.0"
+description = "Implementation of the Shapeshifter (UFTP) protocol"
 dependencies = [
     "xsdata[lxml]>=25.0,<26.0",
     "pynacl==1.5.0",
@@ -12,6 +13,14 @@ dependencies = [
     "termcolor",
 ]
 requires-python = ">=3.10"
+readme = "README.md"
+
+[project.urls]
+Repository = "https://github.com/shapeshifter/shapeshifter-library-python"
+Documentation = "https://github.com/shapeshifter/shapeshifter-library-python/README.md"
+Issues = "https://github.com/shapeshifter/shapeshifter-library-python/issues"
+Changelog = "https://github.com/shapeshifter/shapeshifter-library-python/blob/main/CHANGELOG.md"
+
 
 [dependency-groups]
 dev = [

@@ -3,6 +3,23 @@ Shapeshifter library for Python
 
 This is a Python implementation of the ShapeShifter UFTP protocol.
 
+Overview
+--------
+
+This library implements the full UFTP protocol that you can use for Shapeshifter communications. It implements all three roles: Distribution System Operator (**DSO**), Aggregator (**AGR**) and Common Reference Operator (**CRO**) in both directions (client and service).
+
+Features of this package:
+
+- Building, parsing and validation of the XML messages
+- Signing and verifying of the XML messages using signatures
+- DNS for service discovery and key retrieval
+- Convenient clients for each role-pair
+- Convenient services for each role
+- JSON-serializable dataclasses for easy transport to other systems
+- Fully internal queing system for full-duplex communication with minimal user code required
+- Compatible with version 3.0.0 and 3.1.0 of the Shapeshifter protocol.
+
+
 Installation
 ------------
 
@@ -12,6 +29,8 @@ Installation
 
 Running tests
 ------------
+
+If you want to develop shapeshifter-uftp, you can fork or clone this repository and run the tests:
 
 .. code-block:: bash
 
@@ -212,53 +231,3 @@ To use OAuth in outgoing requests, you can use the provided OAuthClient class. T
 
 
 Similarly, if you have a Service instance that dynamically needs to retrieve the OAuth information for each different recipient server, you can provide an ``oauth_lookup_function`` that takes a ``(sender_domain, sender_role)`` and returns an instance of OAuthClient:
-
-
-Overview
---------
-
-This library implements the full UFTP protocol that you can use for Shapeshifter communications. It implements all three roles: Distribution System Operator (**DSO**), Aggregator (**AGR**) and Common Reference Operator (**CRO**) in both directions (client and service).
-
-Features of this package:
-
-- Building, parsing and validation of the XML messages
-- Signing and verifying of the XML messages using signatures
-- DNS for service discovery and key retrieval
-- Convenient clients for each role-pair
-- Convenient services for each role
-- JSON-serializable dataclasses for easy transport to other systems
-- Fully internal queing system for full-duplex communication with minimal user code required
-- Compatible with the 3.0.0 version of the Shapeshifter protocol.
-
-Version History
----------------
-
-+-------------+-------------------+----------------------------------+
-| Version     | Release Date      | Release Notes                    |
-+=============+===================+==================================+
-| 2.0.1       | 2025-07-08        | Bumped fastapi-xml depedency     |
-|             |                   | version.                         |
-+-------------+-------------------+----------------------------------+
-| 2.0.0       | 2025-07-08        | Support for OAuth 2 on outgoing  |
-|             |                   | messages, updated dependencies   |
-+-------------+-------------------+----------------------------------+
-| 1.2.0       | 2024-04-04        | Upgrade to latest FastAPI and    |
-|             |                   | Pydantic.                        |
-+-------------+-------------------+----------------------------------+
-| 1.1.2       | 2024-03-12        | Pinned dependencies after a      |
-|             |                   | breaking update to fastapi-xml   |
-|             |                   | was released.                    |
-+-------------+-------------------+----------------------------------+
-| 1.1.0       | 2023-08-30        | Use the published 3.0.0 spec     |
-|             |                   | for the XSD validation and       |
-|             |                   | objects.                         |
-+-------------+-------------------+----------------------------------+
-| 1.0.1       | 2023-08-23        | Fixes the following two issues:  |
-|             |                   |                                  |
-|             |                   | - Outgoing signed messages would |
-|             |                   |   be twice-encoded into base64   |
-|             |                   | - Support for empty response     |
-|             |                   |   messages                       |
-+-------------+-------------------+----------------------------------+
-| 1.0.0       | 2023-07-20        | Initial release version          |
-+-------------+-------------------+----------------------------------+

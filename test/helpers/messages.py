@@ -6,7 +6,7 @@ from xsdata.models.datatype import XmlDate
 from shapeshifter_uftp.uftp import *
 
 default_args = {
-    "version": "3.0.0",
+    "version": "3.1.0",
     "sender_domain": "agr.dev",
     "recipient_domain": "cro.dev",
     "time_stamp": datetime.now(timezone.utc).isoformat(),
@@ -130,6 +130,52 @@ messages = [
                 min_activation_factor=0.5
             )
         ],
+        flex_request_message_id=str(uuid4()),
+        **default_args
+    ),
+    FlexOffer(
+        isp_duration="PT15M",
+        period=XmlDate(2023, 1, 1),
+        congestion_point="ean.123456789012",
+        expiration_date_time=datetime.now(timezone.utc).isoformat(),
+        offer_options=[
+            FlexOfferOption(
+                isps=[
+                    FlexOfferOptionISP(
+                        power=1,
+                        start=1,
+                        duration=1
+                    )
+                ],
+                option_reference="MyOption",
+                price=2.30,
+                min_activation_factor=0.5
+            )
+        ],
+        flex_request_message_id=str(uuid4()),
+        **default_args
+    ),
+    FlexOffer(
+        isp_duration="PT15M",
+        period=XmlDate(2023, 1, 1),
+        congestion_point="ean.123456789012",
+        expiration_date_time=datetime.now(timezone.utc).isoformat(),
+        offer_options=[
+            FlexOfferOption(
+                isps=[
+                    FlexOfferOptionISP(
+                        power=1,
+                        start=1,
+                        duration=1
+                    )
+                ],
+                option_reference="MyOption",
+                price=2.30,
+                min_activation_factor=0.5
+            )
+        ],
+        unsolicited=True,
+        flex_request_message_id=None,
         **default_args
     ),
     FlexOfferResponse(flex_offer_message_id=str(uuid4()), **default_args),
@@ -145,6 +191,27 @@ messages = [
         period=XmlDate(2023, 1, 1),
         congestion_point="ean.123456789012",
         flex_offer_message_id=str(uuid4()),
+        contract_id=str(uuid4()),
+        d_prognosis_message_id=str(uuid4()),
+        baseline_reference=str(uuid4()),
+        price=2.00,
+        currency="EUR",
+        order_reference=str(uuid4()),
+        option_reference=str(uuid4()),
+        activation_factor=0.5,
+        **default_args
+    ),
+    FlexOrder(
+        isps=[FlexOrderISP(
+            power=1,
+            duration=1,
+            start=1
+        )],
+        isp_duration="PT15M",
+        period=XmlDate(2023, 1, 1),
+        congestion_point="ean.123456789012",
+        unsolicited=True,
+        flex_offer_message_id=None,
         contract_id=str(uuid4()),
         d_prognosis_message_id=str(uuid4()),
         baseline_reference=str(uuid4()),
