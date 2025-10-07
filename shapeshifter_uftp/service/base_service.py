@@ -35,7 +35,6 @@ class ShapeshifterService():
     threading and context options.
     """
 
-    protocol_version = "3.0.0"
     sender_domain = None
     sender_role = None
     acceptable_messages = []
@@ -52,7 +51,8 @@ class ShapeshifterService():
         oauth_lookup_function=None,
         host: str = "0.0.0.0",
         port: int = 8080,
-        path="/shapeshifter/api/v3/message",
+        path: str = "/shapeshifter/api/v3/message",
+        version: str = "3.1.0"
     ):
         """
         :param sender_domain: our sender domain (FQDN) that the recipient uses to look us up.
@@ -70,6 +70,11 @@ class ShapeshifterService():
         :param port: the port to bind the server to (default: 8080)
         :param path: the URL path that the server listens on (default: /shapeshifter/api/v3/message)
         """
+
+        if version not in ("3.0.0", "3.1.0"):
+            raise ValueError(f"'version' must be one of '3.0.0' or '3.1.0', not {version}")
+
+        self.version = version
 
         # Set the sender domain, which is used
         # to identify us to the other party.
@@ -214,7 +219,7 @@ class ShapeshifterService():
                 f"{err.__class__.__name__}: {err}"
             )
 
-    def _get_client(self, recipient_domain, recipient_role):
+    def _get_client(self, recipient_domain: str, recipient_role: str, version: str = "3.1.0"):
         """
         Method to get a relevant client to communicate to the
         indicated participant.
@@ -230,6 +235,7 @@ class ShapeshifterService():
             recipient_endpoint = recipient_endpoint,
             recipient_signing_key = recipient_signing_key,
             oauth_client = oauth_client,
+            version=version,
         )
 
     def _reject_message(self, message, unsealed_message, reason):
@@ -239,7 +245,7 @@ class ShapeshifterService():
         if type(unsealed_message) not in request_response_map:
             return
 
-        client = self._get_client(message.sender_domain, message.sender_role)
+        client = self._get_client(message.sender_domain, message.sender_role, unsealed_message.version)
         response_type = request_response_map[type(unsealed_message)]
         response_id_field = snake_case(type(unsealed_message).__name__) + "_message_id"
         message_contents = {

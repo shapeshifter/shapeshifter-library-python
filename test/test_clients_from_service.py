@@ -1,9 +1,6 @@
 import pytest
-from itertools import product
+
 from shapeshifter_uftp import (
-    ShapeshifterAgrService,
-    ShapeshifterCroService,
-    ShapeshifterDsoService,
     ShapeshifterAgrCroClient,
     ShapeshifterAgrDsoClient,
     ShapeshifterCroAgrClient,
@@ -13,6 +10,7 @@ from shapeshifter_uftp import (
 )
 
 from .helpers.services import DummyAgrService, DummyCroService, DummyDsoService
+
 
 @pytest.mark.parametrize('service,client,expected_type',
     [(DummyAgrService, 'cro', ShapeshifterAgrCroClient),

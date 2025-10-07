@@ -63,6 +63,11 @@ class FlexOrderResponse(PayloadMessageResponse):
 class FlexOrder(FlexMessage):
     """
     :ivar isp:
+    :ivar unsolicited: Indicates whether this FlexOrder is intended to
+        be unsolicited (i.e. without a preceding FlexOffer).
+    :ivar service_type: Service type for this order, the service type
+        determines response characteristics such as latency or asset
+        participation type.
     :ivar flex_offer_message_id: MessageID of the FlexOffer message this
         order is based on.
     :ivar contract_id: Reference to the concerning bilateral contract,
@@ -95,11 +100,26 @@ class FlexOrder(FlexMessage):
             "min_occurs": 1,
         }
     )
-    flex_offer_message_id: str = field(
+    unsolicited: Optional[bool] = field(
+        default=None,
+        metadata={
+            "name": "Unsolicited",
+            "type": "Attribute",
+        }
+    )
+    service_type: Optional[str] = field(
+        default=None,
+        metadata={
+            "name": "ServiceType",
+            "type": "Attribute",
+        }
+    )
+    flex_offer_message_id: Optional[str] = field(
+        default=None,
         metadata={
             "name": "FlexOfferMessageID",
             "type": "Attribute",
-            "required": True,
+            "required": False,
             "pattern": r"[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}",
         }
     )
@@ -172,3 +192,7 @@ class FlexOrder(FlexMessage):
         self.activation_factor = validate_decimal(
             "activation_factor", self.activation_factor, 2
         )
+        if not self.unsolicited and self.flex_offer_message_id is None:
+            raise TypeError(
+                "FlexOrderMessageId is required if Unsolicited is not True"
+            )

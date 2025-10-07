@@ -157,14 +157,14 @@ class ShapeshifterDsoService(ShapeshifterService, ABC):
     #                         participant.                         #
     # ------------------------------------------------------------ #
 
-    def agr_client(self, recipient_domain) -> ShapeshifterDsoAgrClient:
+    def agr_client(self, recipient_domain, version="3.1.0") -> ShapeshifterDsoAgrClient:
         """
         Retrieve a client object for sending messages to the AGR.
         """
-        return self._get_client(recipient_domain, "AGR")
+        return self._get_client(recipient_domain, "AGR", version)
 
-    def cro_client(self, recipient_domain) -> ShapeshifterDsoCroClient:
+    def cro_client(self, recipient_domain, version="3.1.0") -> ShapeshifterDsoCroClient:
         """
         Retrieve a client object for sending messages to the CRO.
         """
-        return self._get_client(recipient_domain, "CRO")
+        return self._get_client(recipient_domain, "CRO", version)

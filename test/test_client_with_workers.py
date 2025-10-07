@@ -2,7 +2,7 @@ from concurrent.futures import Future
 from functools import partial
 from time import sleep
 
-from shapeshifter_uftp.uftp import AgrPortfolioUpdate, PayloadMessageResponse
+from shapeshifter_uftp.uftp import AgrPortfolioUpdate
 
 from .helpers.messages import messages_by_type
 from .helpers.services import DummyAgrService, DummyCroService

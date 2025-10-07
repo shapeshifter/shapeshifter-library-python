@@ -70,6 +70,10 @@ class DummyAgrService(ShapeshifterAgrService):
             )
         }
 
+    def reset_futures(self, name):
+        self.request_futures[f"pre_process_{name}"] = Future()
+        self.request_futures[f"process_{name}"] = Future()
+
     def process_flex_request(self, message):
         self.request_futures["process_flex_request"].set_result(message)
 
@@ -134,6 +138,11 @@ class DummyCroService(ShapeshifterCroService):
             ]
         }
 
+    def reset_futures(self, name):
+        self.request_futures[f"pre_process_{name}"] = Future()
+        self.request_futures[f"process_{name}"] = Future()
+        self.response_futures[f"pre_process_{name}"] = Future()
+
     def process_agr_portfolio_query(self, message):
         self.request_futures["process_agr_portfolio_query"].set_result(message)
 
@@ -181,6 +190,11 @@ class DummyDsoService(ShapeshifterDsoService):
                 for message in self.acceptable_messages
             ]
         }
+
+    def reset_futures(self, name):
+        self.request_futures[f"pre_process_{name}"] = Future()
+        self.request_futures[f"process_{name}"] = Future()
+        self.response_futures[f"pre_process_{name}"] = Future()
 
     def process_flex_offer(self, message):
         self.request_futures["process_flex_offer"].set_result(message)

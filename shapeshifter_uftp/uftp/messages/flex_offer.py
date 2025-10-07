@@ -150,6 +150,13 @@ class FlexOffer(FlexMessage):
             "pattern": r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d{0,9})?([+-]\d{2}:\d{2}|Z)",
         }
     )
+    unsolicited: Optional[bool] = field(
+        default=None,
+        metadata={
+            "name": "Unsolicited",
+            "type": "Attribute",
+        }
+    )
     flex_request_message_id: Optional[str] = field(
         default=None,
         metadata={
@@ -192,3 +199,5 @@ class FlexOffer(FlexMessage):
 
     def __post_init__(self):
         validate_list('offer_options', self.offer_options, FlexOfferOption, 1)
+        if not self.unsolicited and self.flex_request_message_id is None:
+            raise TypeError("FlexRequestMessageId is required if Unsolicited is not True")
