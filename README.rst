@@ -28,7 +28,7 @@ Installation
     pip install shapeshifter-uftp
 
 Running tests
-------------
+-------------
 
 If you want to develop shapeshifter-uftp, you can fork or clone this repository and run the tests:
 
@@ -230,4 +230,4 @@ To use OAuth in outgoing requests, you can use the provided OAuthClient class. T
     client.send_flex_request_response(...)
 
 
-Similarly, if you have a Service instance that dynamically needs to retrieve the OAuth information for each different recipient server, you can provide an ``oauth_lookup_function`` that takes a ``(sender_domain, sender_role)`` and returns an instance of OAuthClient:
+Similarly, if you have a Service instance that dynamically needs to retrieve the OAuth information for each different recipient server, you can provide an ``oauth_lookup_function`` that takes a ``(sender_domain, sender_role)`` and returns an instance of OAuthClient.

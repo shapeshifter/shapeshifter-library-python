@@ -1,6 +1,7 @@
 Changelog
 ---------
-
+- v2.1.1 (2025-09-07)
+  - Fixed publication of the project readme to PyPI
 - v2.1.0 (2025-09-07)
   - Support for Shapeshifter 3.1.0
 - v2.0.1 (2025-07-08)
