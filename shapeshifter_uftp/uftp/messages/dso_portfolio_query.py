@@ -116,6 +116,7 @@ class DsoPortfolioQueryResponse(PayloadMessageResponse):
         metadata={
             "name": "Period",
             "type": "Attribute",
+            "format": "%Y-%m-%d",
             "required": True,
         }
     )
@@ -151,6 +152,7 @@ class DsoPortfolioQuery(PayloadMessage):
         metadata={
             "name": "Period",
             "type": "Attribute",
+            "format": "%Y-%m-%d",
             "required": True,
         }
     )

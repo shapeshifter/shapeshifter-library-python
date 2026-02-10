@@ -115,6 +115,7 @@ class ContractSettlementPeriod:
         metadata={
             "name": "Period",
             "type": "Attribute",
+            "format": "%Y-%m-%d",
             "required": True,
         }
     )
@@ -294,6 +295,7 @@ class FlexOrderSettlement:
         metadata={
             "name": "Period",
             "type": "Attribute",
+            "format": "%Y-%m-%d",
             "required": True,
         }
     )
@@ -421,6 +423,7 @@ class FlexSettlement(PayloadMessageResponse):
         metadata={
             "name": "PeriodStart",
             "type": "Attribute",
+            "format": "%Y-%m-%d",
             "required": True,
         }
     )
@@ -428,6 +431,7 @@ class FlexSettlement(PayloadMessageResponse):
         metadata={
             "name": "PeriodEnd",
             "type": "Attribute",
+            "format": "%Y-%m-%d",
             "required": True,
         }
     )

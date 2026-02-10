@@ -36,6 +36,7 @@ class DsoPortfolioUpdateConnection:
         metadata={
             "name": "StartPeriod",
             "type": "Attribute",
+            "format": "%Y-%m-%d",
             "required": True,
         }
     )
@@ -44,6 +45,7 @@ class DsoPortfolioUpdateConnection:
         metadata={
             "name": "EndPeriod",
             "type": "Attribute",
+            "format": "%Y-%m-%d",
         }
     )
 
@@ -90,6 +92,7 @@ class DsoPortfolioUpdateCongestionPoint:
         metadata={
             "name": "StartPeriod",
             "type": "Attribute",
+            "format": "%Y-%m-%d",
             "required": True,
         }
     )
@@ -98,6 +101,7 @@ class DsoPortfolioUpdateCongestionPoint:
         metadata={
             "name": "EndPeriod",
             "type": "Attribute",
+            "format": "%Y-%m-%d",
         }
     )
     mutex_offers_supported: bool = field(

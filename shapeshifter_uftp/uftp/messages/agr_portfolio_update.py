@@ -37,6 +37,7 @@ class AgrPortfolioUpdateConnection:
         metadata={
             "name": "StartPeriod",
             "type": "Attribute",
+            "format": "%Y-%m-%d",
             "required": True,
         }
     )
@@ -45,6 +46,7 @@ class AgrPortfolioUpdateConnection:
         metadata={
             "name": "EndPeriod",
             "type": "Attribute",
+            "format": "%Y-%m-%d",
         }
     )
 

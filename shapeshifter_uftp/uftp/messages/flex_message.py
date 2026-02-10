@@ -48,6 +48,7 @@ class FlexMessage(PayloadMessage):
         metadata={
             "name": "Period",
             "type": "Attribute",
+            "format": "%Y-%m-%d",
             "required": True,
         }
     )

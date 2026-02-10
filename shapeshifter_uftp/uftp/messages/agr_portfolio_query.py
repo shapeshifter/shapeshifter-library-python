@@ -188,6 +188,7 @@ class AgrPortfolioQueryResponse(PayloadMessageResponse):
         metadata={
             "name": "Period",
             "type": "Attribute",
+            "format": "%Y-%m-%d",
             "required": True,
         }
     )
@@ -226,6 +227,7 @@ class AgrPortfolioQuery(PayloadMessage):
         metadata={
             "name": "Period",
             "type": "Attribute",
+            "format": "%Y-%m-%d",
             "required": True,
         }
     )
