@@ -1,5 +1,9 @@
 Changelog
 ---------
+- v2.2.0 (2026-02-11)
+  - Updated dependencies and supported python to version 3.14
+- v2.1.2 (2026-02-10)
+  - Explicit formatting for XML Dates
 - v2.1.1 (2025-09-07)
   - Fixed publication of the project readme to PyPI
 - v2.1.0 (2025-09-07)
