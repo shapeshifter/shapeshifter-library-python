@@ -1,9 +1,7 @@
 import re
 from concurrent.futures import ThreadPoolExecutor
-from datetime import datetime, timezone
 from threading import Thread
 from time import sleep
-from uuid import uuid4
 
 import uvicorn
 from fastapi import FastAPI, Response
@@ -22,7 +20,6 @@ from ..logging import logger
 from ..uftp import (
     AcceptedRejected,
     PayloadMessage,
-    PayloadMessageResponse,
     SignedMessage,
     request_response_map,
 )
@@ -154,7 +151,7 @@ class ShapeshifterService():
     #              Shapeshifter UFTP implementation.               #
     # ------------------------------------------------------------ #
 
-    def _receive_message(self, message: SignedMessage) -> None:
+    def _receive_message(self, message: SignedMessage) -> Response:
         """
         The default entrypoint for the route. This will unpack the
         message and validate the signature. It will thes pass the

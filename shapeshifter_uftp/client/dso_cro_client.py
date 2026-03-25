@@ -1,4 +1,4 @@
-from ..uftp import DsoPortfolioQuery, DsoPortfolioUpdate
+from ..uftp import DsoPortfolioQuery, DsoPortfolioUpdate, UsefRole
 from .base_client import ShapeshifterClient
 
 
@@ -7,8 +7,8 @@ class ShapeshifterDsoCroClient(ShapeshifterClient):
     Client that allows the DSO to connect to the CRO.
     """
 
-    sender_role = "DSO"
-    recipient_role = "CRO"
+    sender_role = UsefRole.DSO
+    recipient_role = UsefRole.CRO
 
     def send_dso_portfolio_update(self, message: DsoPortfolioUpdate):
         """

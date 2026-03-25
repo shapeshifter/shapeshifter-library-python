@@ -1,4 +1,4 @@
-from ..uftp import AgrPortfolioQueryResponse, AgrPortfolioUpdateResponse
+from ..uftp import AgrPortfolioQueryResponse, AgrPortfolioUpdateResponse, UsefRole
 from .base_client import ShapeshifterClient
 
 
@@ -7,8 +7,8 @@ class ShapeshifterCroAgrClient(ShapeshifterClient):
     Client that allows the CRO to connect to the Aggregator.
     """
 
-    sender_role = "CRO"
-    recipient_role = "AGR"
+    sender_role = UsefRole.CRO
+    recipient_role = UsefRole.AGR
 
     def send_agr_portfolio_update_response(self, message: AgrPortfolioUpdateResponse):
         """

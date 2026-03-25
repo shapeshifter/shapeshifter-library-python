@@ -11,7 +11,7 @@ from .. import transport
 from ..exceptions import ClientTransportException
 from ..logging import logger
 from ..oauth import OAuthClient, PassthroughOAuthClient
-from ..uftp import PayloadMessage, PayloadMessageResponse, SignedMessage
+from ..uftp import PayloadMessage, PayloadMessageResponse, SignedMessage, UsefRole
 
 
 class ShapeshifterClient:
@@ -19,8 +19,8 @@ class ShapeshifterClient:
     Basis for all Shapeshifter client.
     """
 
-    sender_role: str
-    recipient_role: str
+    sender_role: UsefRole
+    recipient_role: UsefRole
     num_outgoing_workers = 10
     num_delivery_attempts = 10
     request_timeout = 30
@@ -32,9 +32,9 @@ class ShapeshifterClient:
         sender_domain: str,
         signing_key: str,
         recipient_domain: str,
-        recipient_endpoint: str = None,
-        recipient_signing_key: str = None,
-        oauth_client: OAuthClient = None,
+        recipient_endpoint: str | None = None,
+        recipient_signing_key: str | None = None,
+        oauth_client: OAuthClient | None = None,
         version: str = "3.1.0"
     ):
         """
@@ -101,7 +101,6 @@ class ShapeshifterClient:
         # properties can be calculated in the framework anyway.
         message.version = self.version
         message.sender_domain = self.sender_domain
-        message.sender_role = self.sender_role
         message.recipient_domain = self.recipient_domain
         message.time_stamp = (
             message.time_stamp or datetime.now(timezone.utc).isoformat()

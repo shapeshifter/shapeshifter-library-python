@@ -22,7 +22,7 @@ from .exceptions import (
     ServiceDiscoveryException,
 )
 from .logging import logger
-from .uftp import PayloadMessage
+from .uftp import PayloadMessage, SignedMessage
 
 _context = XmlContext()
 serializer = XmlSerializer(context=_context, config=SerializerConfig(indent="  "))
@@ -76,7 +76,7 @@ def unseal_message(message: bytes, public_key: str) -> PayloadMessage:
         raise SchemaException(str(exc)) from exc
 
 
-def to_xml(message: PayloadMessage) -> str:
+def to_xml(message: PayloadMessage | SignedMessage) -> str:
     """
     Serialize the given PayloadMessage into an XML string.
     """
@@ -174,7 +174,7 @@ def get_keys(domain, role):
         )
 
     # Verify that the string is of the expected length (4 + 44 bytes or 4 + 88 bytes)
-    if not len(result) in (48, 92):
+    if len(result) not in (48, 92):
         raise AuthenticationTimeoutException(
             f"Could not retrieve public key(s) at {dns_name}: "
             f"string '{result}' was not of appropriate length (48 or 90 characters)"
@@ -190,7 +190,7 @@ def get_keys(domain, role):
         ) from exc
 
     # Now verify that the decoded length is 64
-    if not len(combined_keys) in (32, 64):
+    if len(combined_keys) not in (32, 64):
         raise AuthenticationTimeoutException(
             f"Could not retrieve public keys at {dns_name}: "
             f"decoded base64 data should be 32 or 64 bytes long, "

@@ -8,6 +8,7 @@ from ..uftp import (
     FlexSettlement,
     MeteringResponse,
     PayloadMessageResponse,
+    UsefRole,
 )
 from .base_client import ShapeshifterClient
 
@@ -17,8 +18,8 @@ class ShapeshifterDsoAgrClient(ShapeshifterClient):
     Client that allows the DSO to connect to the Aggregator.
     """
 
-    sender_role = "DSO"
-    recipient_role = "AGR"
+    sender_role = UsefRole.DSO
+    recipient_role = UsefRole.AGR
 
     def send_d_prognosis_response(self, message: DPrognosisResponse) -> PayloadMessageResponse:
         """
