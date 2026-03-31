@@ -1,6 +1,6 @@
 [project]
 name = "shapeshifter_uftp"
-version = "2.2.0"
+version = "2.3.0"
 description = "Implementation of the Shapeshifter (UFTP) protocol"
 dependencies = [
     "xsdata[lxml]>=25.0,<27.0",
