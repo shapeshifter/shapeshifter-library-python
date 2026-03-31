@@ -14,6 +14,8 @@ from ..oauth import OAuthClient, PassthroughOAuthClient
 from ..uftp import (
     PayloadMessage,
     SignedMessage,
+    TestMessage,
+    TestMessageResponse,
     UsefRole,
 )
 
@@ -83,6 +85,18 @@ class ShapeshifterClient:
             self.oauth_client = oauth_client
         else:
             self.oauth_client = PassthroughOAuthClient()
+
+    # ------------------------------------------------------------ #
+    #                        Test Messages                         #
+    # ------------------------------------------------------------ #
+    def send_test_message(self, message: TestMessage | None = None):
+        if message is None:
+            message = TestMessage()
+
+        return self._send_message(message)
+
+    def send_test_message_response(self, message: TestMessageResponse):
+        return self._send_message(message)
 
     def _send_message(self, message: PayloadMessage) -> None:
         """

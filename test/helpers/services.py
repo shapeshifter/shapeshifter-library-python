@@ -102,6 +102,14 @@ class DummyAgrService(ShapeshifterAgrService):
     def process_metering_response(self, message):
         self.request_futures["process_metering_response"].set_result(message)
 
+    def process_test_message(self, message, sender_role):
+        self.request_futures["process_test_message"].set_result(message)
+        super().process_test_message(message, sender_role)
+
+    def process_test_message_response(self, message):
+        self.request_futures["process_test_message_response"].set_result(message)
+        super().process_test_message_response(message)
+
 
 class DummyCroService(ShapeshifterCroService):
 
@@ -153,6 +161,13 @@ class DummyCroService(ShapeshifterCroService):
     def process_dso_portfolio_update(self, message):
         self.request_futures["process_dso_portfolio_update"].set_result(message)
 
+    def process_test_message(self, message, sender_role):
+        self.request_futures["process_test_message"].set_result(message)
+        super().process_test_message(message, sender_role)
+
+    def process_test_message_response(self, message):
+        self.request_futures["process_test_message_response"].set_result(message)
+        super().process_test_message_response(message)
 
 class DummyDsoService(ShapeshifterDsoService):
 
@@ -222,6 +237,14 @@ class DummyDsoService(ShapeshifterDsoService):
     def process_metering(self, message):
         self.request_futures["process_metering"].set_result(message)
 
+    def process_test_message(self, message, sender_role):
+        self.request_futures["process_test_message"].set_result(message)
+        super().process_test_message(message, sender_role)
+
+    def process_test_message_response(self, message):
+        if self.request_futures["process_test_message_response"].done() is False:
+            self.request_futures["process_test_message_response"].set_result(message)
+        super().process_test_message_response(message)
 
 class DefaultResponseAgrService(ShapeshifterAgrService):
     def __init__(self):

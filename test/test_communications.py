@@ -52,3 +52,21 @@ def test_communications(message, agr_service, cro_service, dso_service):
         assert recipient.request_futures[f"process_{snake_case(message.__class__.__name__)}"].result() == message
         assert main_future.result() is None
 
+
+def test_test_messages(agr_service, cro_service, dso_service):
+    service_map = {
+        "AGR": agr_service,
+        "CRO": cro_service,
+        "DSO": dso_service,
+    }
+
+    agr_service.dso_client(dso_service.sender_domain).send_test_message()
+    assert dso_service.request_futures["process_test_message"].result() is not None
+    assert agr_service.request_futures["process_test_message_response"].result() is not None
+
+    agr_service.cro_client(cro_service.sender_domain).send_test_message()
+    assert cro_service.request_futures["process_test_message"].result() is not None
+
+    dso_service.agr_client(agr_service.sender_domain).send_test_message()
+    assert agr_service.request_futures["process_test_message"].result() is not None
+    assert dso_service.request_futures["process_test_message_response"].result() is not None

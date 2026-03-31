@@ -12,6 +12,8 @@ from ..uftp import (
     FlexReservationUpdate,
     FlexSettlement,
     MeteringResponse,
+    TestMessage,
+    TestMessageResponse,
     UsefRole,
 )
 from .base_service import ShapeshifterService
@@ -38,6 +40,8 @@ class ShapeshifterAgrService(
         FlexReservationUpdate,
         FlexSettlement,
         MeteringResponse,
+        TestMessage,
+        TestMessageResponse,
     ]
 
 

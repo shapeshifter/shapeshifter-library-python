@@ -21,6 +21,8 @@ from ..uftp import (
     AcceptedRejected,
     PayloadMessage,
     SignedMessage,
+    TestMessage,
+    TestMessageResponse,
     UsefRole,
     request_response_map,
 )
@@ -198,11 +200,11 @@ class ShapeshifterService():
         else:
             # If the initial checks passed, process the message in the
             # user-defined pipeline.
-            self.inbound_executor.submit(self._process_message, unsealed_message)
+            self.inbound_executor.submit(self._process_message, unsealed_message, message.sender_role)
 
         return Response(status_code=200)
 
-    def _process_message(self, message: PayloadMessage):
+    def _process_message(self, message: PayloadMessage, sender_role: UsefRole):
         """
         Find the relevant post-processing method to handle the message
         outside of the request context, and run it.
@@ -210,7 +212,10 @@ class ShapeshifterService():
         process_method_name = f"process_{snake_case(message.__class__.__name__)}"
         process_method = getattr(self, process_method_name)
         try:
-            process_method(message)
+            if isinstance(message, TestMessage):
+                process_method(message, sender_role)
+            else:
+                process_method(message)
         except Exception as err:  # pylint: disable=broad-exception-caught
             logger.error(
                 f"An error occurred during the post-processing of a {message.__class__.__name__} message."
@@ -278,6 +283,24 @@ class ShapeshifterService():
         Tell uvicorn we should exit and wait for the thread to finish.
         """
         self.stop()
+
+    # ------------------------------------------------------------ #
+    #                Common messages to all parties                #
+    # ------------------------------------------------------------ #
+
+    def process_test_message(self, message: TestMessage, sender_role: UsefRole):
+        logger.info(
+            "Received a TestMessage, will respond with TestMessageResponse. "
+            f"Implement the process_test_message method on your {self.__class__.__qualname__} "
+            f"to implement custom behavior. The message was: {message}"
+        )
+        response = TestMessageResponse(conversation_id=message.conversation_id)
+        client = self._get_client(message.sender_domain, sender_role, version=message.version or self.version)
+        client.send_test_message_response(response)
+
+    def process_test_message_response(self, message: TestMessage):
+        logger.info(f"Received a TestMessageResponse: {message}")
+
 
 
 def snake_case(text):

@@ -6,6 +6,8 @@ from ..uftp import (
     AgrPortfolioUpdate,
     DsoPortfolioQuery,
     DsoPortfolioUpdate,
+    TestMessage,
+    TestMessageResponse,
     UsefRole,
 )
 from .base_service import ShapeshifterService
@@ -24,6 +26,8 @@ class ShapeshifterCroService(ShapeshifterService, ABC):
         DsoPortfolioUpdate,
         AgrPortfolioQuery,
         AgrPortfolioUpdate,
+        TestMessage,
+        TestMessageResponse,
     ]
 
     # ------------------------------------------------------------ #
