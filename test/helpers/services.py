@@ -1,8 +1,7 @@
 import itertools
-from base64 import b64decode, b64encode
+from base64 import b64encode
 from concurrent.futures import Future
 
-import responses
 from nacl.bindings import crypto_sign_keypair
 
 from shapeshifter_uftp import (
@@ -10,7 +9,6 @@ from shapeshifter_uftp import (
     ShapeshifterCroService,
     ShapeshifterDsoService,
 )
-from shapeshifter_uftp.logging import logger
 from shapeshifter_uftp.service.base_service import snake_case
 
 AGR_DOMAIN = "agr.dev"
@@ -146,13 +144,11 @@ class DummyCroService(ShapeshifterCroService):
     def process_agr_portfolio_query(self, message):
         self.request_futures["process_agr_portfolio_query"].set_result(message)
 
-
     def process_agr_portfolio_update(self, message):
         self.request_futures["process_agr_portfolio_update"].set_result(message)
 
     def process_dso_portfolio_query(self, message):
         self.request_futures["process_dso_portfolio_query"].set_result(message)
-
 
     def process_dso_portfolio_update(self, message):
         self.request_futures["process_dso_portfolio_update"].set_result(message)

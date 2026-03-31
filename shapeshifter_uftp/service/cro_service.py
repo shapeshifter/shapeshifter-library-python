@@ -2,12 +2,11 @@ from abc import ABC, abstractmethod
 
 from ..client import ShapeshifterCroAgrClient, ShapeshifterCroDsoClient
 from ..uftp import (
-    AcceptedRejected,
     AgrPortfolioQuery,
     AgrPortfolioUpdate,
     DsoPortfolioQuery,
     DsoPortfolioUpdate,
-    PayloadMessageResponse,
+    UsefRole,
 )
 from .base_service import ShapeshifterService
 
@@ -19,7 +18,7 @@ class ShapeshifterCroService(ShapeshifterService, ABC):
     It can receive requests from the Aggregator and from the DSO.
     """
 
-    sender_role = "CRO"
+    sender_role = UsefRole.CRO
     acceptable_messages = [
         DsoPortfolioQuery,
         DsoPortfolioUpdate,

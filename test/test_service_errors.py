@@ -1,17 +1,12 @@
-from base64 import b64decode, b64encode
+from base64 import b64decode
 
-import pytest
 import requests
 from nacl.bindings import crypto_sign
 
-from shapeshifter_uftp.exceptions import ClientTransportException
-from shapeshifter_uftp.transport import from_xml, seal_message, to_xml, unseal_message
+from shapeshifter_uftp.transport import seal_message, to_xml
 from shapeshifter_uftp.uftp import (
     AcceptedRejected,
     AgrPortfolioUpdate,
-    FlexOffer,
-    FlexRequestResponse,
-    PayloadMessageResponse,
     SignedMessage,
 )
 

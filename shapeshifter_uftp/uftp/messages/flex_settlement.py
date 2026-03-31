@@ -2,13 +2,11 @@ from dataclasses import dataclass, field
 from decimal import Decimal
 from typing import List, Optional
 
-from xsdata.models.datatype import XmlDate, XmlDuration
+from xsdata.models.datatype import XmlDate
 
-from ..defaults import DEFAULT_TIME_ZONE
-from ..enums import AcceptedDisputed, RedispatchBy
+from ..enums import AcceptedDisputed
 from ..validations import validate_decimal, validate_list
-from .flex_message import FlexMessage
-from .payload_message import PayloadMessage, PayloadMessageResponse
+from .payload_message import PayloadMessageResponse
 
 
 @dataclass(kw_only=True)

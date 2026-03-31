@@ -9,7 +9,6 @@ from shapeshifter_uftp.oauth import AuthorizationError
 from .helpers.messages import messages_by_type
 from .helpers.services import (
     AGR_PRIVATE_KEY,
-    AGR_PUBLIC_KEY,
     DSO_PUBLIC_KEY,
     DummyAgrService,
 )

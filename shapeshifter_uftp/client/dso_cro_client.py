@@ -10,16 +10,16 @@ class ShapeshifterDsoCroClient(ShapeshifterClient):
     sender_role = UsefRole.DSO
     recipient_role = UsefRole.CRO
 
-    def send_dso_portfolio_update(self, message: DsoPortfolioUpdate):
+    def send_dso_portfolio_update(self, message: DsoPortfolioUpdate) -> None:
         """
         The DSOPortfolioUpdate is used by the DSO to indicate on which
         congestion points it wants to engage in flexibility trading.
         """
-        return self._send_message(message)
+        self._send_message(message)
 
-    def send_dso_portfolio_query(self, message: DsoPortfolioQuery):
+    def send_dso_portfolio_query(self, message: DsoPortfolioQuery) -> None:
         """
         DSOPortfolioQuery is used by DSOs to discover which AGRs represent
         connections on its registered congestion point(s).
         """
-        return self._send_message(message)
+        self._send_message(message)

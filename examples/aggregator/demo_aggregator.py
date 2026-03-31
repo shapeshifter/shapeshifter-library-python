@@ -1,9 +1,9 @@
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timezone
+
+from xsdata.models.datatype import XmlDate
 
 from shapeshifter_uftp import ShapeshifterAgrService
-from shapeshifter_uftp.uftp import (FlexOffer, FlexOfferOption,
-                                    FlexOfferOptionISP)
-from xsdata.models.datatype import XmlDate
+from shapeshifter_uftp.uftp import FlexOffer, FlexOfferOption, FlexOfferOptionISP
 
 
 class DemoAggregator(ShapeshifterAgrService):

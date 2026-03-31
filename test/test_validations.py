@@ -1,5 +1,5 @@
 from datetime import datetime, timezone
-from decimal import Decimal, InvalidOperation
+from decimal import Decimal
 from uuid import uuid4
 
 import pytest

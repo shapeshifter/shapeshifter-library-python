@@ -2,7 +2,6 @@ from abc import ABC, abstractmethod
 
 from ..client import ShapeshifterDsoAgrClient, ShapeshifterDsoCroClient
 from ..uftp import (
-    AcceptedRejected,
     DPrognosis,
     DsoPortfolioQueryResponse,
     DsoPortfolioUpdateResponse,
@@ -13,7 +12,7 @@ from ..uftp import (
     FlexReservationUpdateResponse,
     FlexSettlementResponse,
     Metering,
-    PayloadMessageResponse,
+    UsefRole,
 )
 from .base_service import ShapeshifterService
 
@@ -28,7 +27,7 @@ class ShapeshifterDsoService(ShapeshifterService, ABC):
     You should subclass this class and implement your own message handling methods.
     """
 
-    sender_role = "DSO"
+    sender_role = UsefRole.DSO
     acceptable_messages = [
         DPrognosis,
         DsoPortfolioQueryResponse,

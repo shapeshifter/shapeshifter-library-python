@@ -1,7 +1,5 @@
 from dataclasses import dataclass, field
-from typing import List, Optional
-
-from xsdata.models.datatype import XmlDate, XmlDuration
+from typing import Optional
 
 from ..enums import AcceptedRejected
 

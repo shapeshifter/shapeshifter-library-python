@@ -1,13 +1,10 @@
 from dataclasses import dataclass, field
 from typing import List, Optional
 
-from xsdata.models.datatype import XmlDate, XmlDuration
-
-from ..defaults import DEFAULT_TIME_ZONE
 from ..enums import AvailableRequested
 from ..validations import validate_list
 from .flex_message import FlexMessage
-from .payload_message import PayloadMessage, PayloadMessageResponse
+from .payload_message import PayloadMessageResponse
 
 
 @dataclass(kw_only=True)

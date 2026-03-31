@@ -1,5 +1,7 @@
 import pytest
-from shapeshifter_uftp.transport import from_json, to_json, from_xml, to_xml
+
+from shapeshifter_uftp.transport import from_json, from_xml, to_json, to_xml
+
 from .helpers.messages import messages
 
 

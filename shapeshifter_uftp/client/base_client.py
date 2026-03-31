@@ -11,7 +11,11 @@ from .. import transport
 from ..exceptions import ClientTransportException
 from ..logging import logger
 from ..oauth import OAuthClient, PassthroughOAuthClient
-from ..uftp import PayloadMessage, PayloadMessageResponse, SignedMessage, UsefRole
+from ..uftp import (
+    PayloadMessage,
+    SignedMessage,
+    UsefRole,
+)
 
 
 class ShapeshifterClient:
@@ -80,7 +84,7 @@ class ShapeshifterClient:
         else:
             self.oauth_client = PassthroughOAuthClient()
 
-    def _send_message(self, message: PayloadMessage) -> PayloadMessageResponse:
+    def _send_message(self, message: PayloadMessage) -> None:
         """
         Perform an operation. This will take the message object, pack
         it up into a SignedMessage, sign and seal it, and send it to
@@ -144,28 +148,6 @@ class ShapeshifterClient:
             )
             logger.error(error_msg)
             raise ClientTransportException(error_msg, response=response)
-
-        # If the response was empty, don't attempt to parse it
-        if len(response.content) == 0:
-            return None
-
-        # Instantiate a SignedMessage object from the response bytes.
-        sealed_response = transport.parser.from_bytes(response.content)
-
-        # Use the static key that was provided when the client was
-        # initialized, or retrieve the key using DNS. The DNS
-        # implementation caches the DNS lookups so they are not that
-        # expensive after the first time.
-        if not (recipient_signing_key := self.recipient_signing_key):
-            recipient_signing_key = transport.get_key(
-                self.recipient_domain, self.recipient_role
-            )
-
-        # Unseal the response using the other party's public signing
-        # key and return the response message within it
-        return transport.unseal_message(
-            message=sealed_response.body, public_key=recipient_signing_key
-        )
 
     # ------------------------------------------------------------ #
     #     Methods related to queueing and scheduling outgoing      #

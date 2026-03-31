@@ -7,7 +7,6 @@ from ..uftp import (
     FlexReservationUpdateResponse,
     FlexSettlementResponse,
     Metering,
-    PayloadMessageResponse,
     UsefRole,
 )
 from .base_client import ShapeshifterClient
@@ -21,7 +20,7 @@ class ShapeshifterAgrDsoClient(ShapeshifterClient):
     sender_role = UsefRole.AGR
     recipient_role = UsefRole.DSO
 
-    def send_d_prognosis(self, message: DPrognosis) -> PayloadMessageResponse:
+    def send_d_prognosis(self, message: DPrognosis) -> None:
         """
         D-Prognosis messages are used to communicate D-prognoses between AGRs
         and DSOs. D-Prognosis messages always contain data for all ISPs for the
@@ -32,7 +31,7 @@ class ShapeshifterAgrDsoClient(ShapeshifterClient):
         """
         return self._send_message(message)
 
-    def send_flex_request_response(self, message: FlexRequestResponse) -> PayloadMessageResponse:
+    def send_flex_request_response(self, message: FlexRequestResponse) -> None:
         """
         Upon receiving and processing a FlexRequest message, the receiving
         implementation must reply with a FlexRequestResponse, indicating
@@ -40,7 +39,7 @@ class ShapeshifterAgrDsoClient(ShapeshifterClient):
         """
         return self._send_message(message)
 
-    def send_flex_offer(self, message: FlexOffer) -> PayloadMessageResponse:
+    def send_flex_offer(self, message: FlexOffer) -> None:
         """
         FlexOffer messages are used by AGRs to make DSOs an offer for provision
         of flexibility. A FlexOffer message contains a list of ISPs and, for
@@ -53,24 +52,24 @@ class ShapeshifterAgrDsoClient(ShapeshifterClient):
         sure that it can actually provide the flexibility offered across all of
         its FlexOffers.
         """
-        return self._send_message(message)
+        self._send_message(message)
 
-    def send_flex_offer_revocation(self, message: FlexOfferRevocation) -> PayloadMessageResponse:
+    def send_flex_offer_revocation(self, message: FlexOfferRevocation) -> None:
         """
         The FlexOfferRevocation message is used by the AGR to revoke a FlexOffer
         previously sent to a DSO. It voids the FlexOffer, even if its validity
         time has not yet expired. Revocation is not allowed for FlexOffers that
         already have associated accepted FlexOrders.
         """
-        return self._send_message(message)
+        self._send_message(message)
 
-    def send_flex_order_response(self, message: FlexOrderResponse) -> PayloadMessageResponse:
+    def send_flex_order_response(self, message: FlexOrderResponse) -> None:
         """
         Confirm the flex order.
         """
-        return self._send_message(message)
+        self._send_message(message)
 
-    def send_flex_settlement_response(self, message: FlexSettlementResponse) -> PayloadMessageResponse:
+    def send_flex_settlement_response(self, message: FlexSettlementResponse) -> None:
         """
         Upon receiving and processing a FlexSettlement message, the AGR must
         reply with a FlexSettlementResponse, indicating whether the initial
@@ -78,16 +77,16 @@ class ShapeshifterAgrDsoClient(ShapeshifterClient):
         rejected, the DSO should consider all FlexOrderSettlement elements of
         that message related to potential dispute.
         """
-        return self._send_message(message)
+        self._send_message(message)
 
-    def send_flex_reservation_update_response(self, message: FlexReservationUpdateResponse) -> PayloadMessageResponse:
+    def send_flex_reservation_update_response(self, message: FlexReservationUpdateResponse) -> None:
         """
         Confirm the flex reservation update.
         """
-        return self._send_message(message)
+        self._send_message(message)
 
-    def send_metering(self, message: Metering) -> PayloadMessageResponse:
+    def send_metering(self, message: Metering) -> None:
         """
         Send metering data to the DSO.
         """
-        return self._send_message(message)
+        self._send_message(message)

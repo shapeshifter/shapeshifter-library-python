@@ -21,6 +21,7 @@ from ..uftp import (
     AcceptedRejected,
     PayloadMessage,
     SignedMessage,
+    UsefRole,
     request_response_map,
 )
 
@@ -216,7 +217,7 @@ class ShapeshifterService():
                 f"{err.__class__.__name__}: {err}"
             )
 
-    def _get_client(self, recipient_domain: str, recipient_role: str, version: str = "3.1.0"):
+    def _get_client(self, recipient_domain: str, recipient_role: UsefRole, version: str = "3.1.0"):
         """
         Method to get a relevant client to communicate to the
         indicated participant.
@@ -254,7 +255,6 @@ class ShapeshifterService():
         }
         response_message = response_type(**message_contents)
         client._send_message(response_message)
-
 
     def __enter__(self):
         """

@@ -1,6 +1,5 @@
-import pytest
-import subprocess
 import re
+import subprocess
 
 
 # These tests will not work in a pipeline due to local requirements, and are thus disabled for now

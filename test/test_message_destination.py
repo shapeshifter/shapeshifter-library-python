@@ -1,16 +1,17 @@
 import pytest
-from shapeshifter_uftp.uftp import destination_map
-from shapeshifter_uftp import uftp
+
 from shapeshifter_uftp import (
+    FlexMessage,
+    PayloadMessage,
+    PayloadMessageResponse,
     ShapeshifterAgrService,
     ShapeshifterCroService,
     ShapeshifterDsoService,
-    PayloadMessage,
-    PayloadMessageResponse,
     TestMessage,
     TestMessageResponse,
-    FlexMessage,
+    uftp,
 )
+from shapeshifter_uftp.uftp import destination_map
 
 
 @pytest.mark.parametrize(

@@ -1,8 +1,11 @@
+import os
+
 import pytest
 import xmlschema
+
 from shapeshifter_uftp.transport import to_xml
 from shapeshifter_uftp.uftp import destination_map
-import os
+
 from .helpers.messages import messages
 
 base_url = os.path.join(os.path.dirname(__file__), 'schema')

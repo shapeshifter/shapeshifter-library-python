@@ -1,10 +1,16 @@
 from datetime import datetime, timezone
 from uuid import uuid4
 
-from shapeshifter_uftp import ShapeshifterDsoService
-from shapeshifter_uftp.uftp import (AvailableRequested, FlexOrder,
-                                    FlexOrderISP, FlexRequest, FlexRequestISP)
 from xsdata.models.datatype import XmlDate
+
+from shapeshifter_uftp import ShapeshifterDsoService
+from shapeshifter_uftp.uftp import (
+    AvailableRequested,
+    FlexOrder,
+    FlexOrderISP,
+    FlexRequest,
+    FlexRequestISP,
+)
 
 
 class DemoDSO(ShapeshifterDsoService):

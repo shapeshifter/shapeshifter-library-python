@@ -2,7 +2,6 @@ from abc import ABC, abstractmethod
 
 from ..client import ShapeshifterAgrCroClient, ShapeshifterAgrDsoClient
 from ..uftp import (
-    AcceptedRejected,
     AgrPortfolioQueryResponse,
     AgrPortfolioUpdateResponse,
     DPrognosisResponse,
@@ -13,7 +12,7 @@ from ..uftp import (
     FlexReservationUpdate,
     FlexSettlement,
     MeteringResponse,
-    PayloadMessageResponse,
+    UsefRole,
 )
 from .base_service import ShapeshifterService
 
@@ -27,7 +26,7 @@ class ShapeshifterAgrService(
     This service can receive requests from the DSO.
     """
 
-    sender_role = "AGR"
+    sender_role = UsefRole.AGR
     acceptable_messages = [
         AgrPortfolioQueryResponse,
         AgrPortfolioUpdateResponse,
