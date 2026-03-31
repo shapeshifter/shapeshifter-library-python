@@ -51,3 +51,4 @@ def test_communications(message, agr_service, cro_service, dso_service):
 
         assert recipient.request_futures[f"process_{snake_case(message.__class__.__name__)}"].result() == message
         assert main_future.result() is None
+

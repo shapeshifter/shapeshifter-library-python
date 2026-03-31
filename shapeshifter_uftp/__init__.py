@@ -135,6 +135,7 @@ __all__ = [
     "MeteringProfileEnum",
     "MeteringResponse",
     "MeteringUnit",
+    "OAuthClient",
     "PayloadMessage",
     "PayloadMessageResponse",
     "SignedMessage",
