@@ -71,3 +71,13 @@ packages = [
     "shapeshifter_uftp.uftp",
     "shapeshifter_uftp.uftp.messages"
 ]
+
+[tool.ruff.lint]
+select = [
+    "I",
+    "W191",
+    "W291",
+    "W292",
+    "W293",
+    "F401",
+]
