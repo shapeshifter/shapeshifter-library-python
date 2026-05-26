@@ -190,5 +190,5 @@ class FlexOrder(FlexMessage):
         )
         if not self.unsolicited and self.flex_offer_message_id is None:
             raise TypeError(
-                "FlexOrderMessageId is required if Unsolicited is not True"
+                "FlexOfferMessageId is required if Unsolicited is not True"
             )
