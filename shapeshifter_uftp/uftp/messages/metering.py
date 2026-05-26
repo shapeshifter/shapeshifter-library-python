@@ -194,7 +194,7 @@ class Metering(PayloadMessage):
             "name": "EAN",
             "type": "Attribute",
             "required": True,
-            "pattern": r"[Ee][0-9]{16}",
+            "pattern": r"[Ee][0-9]{18}",
         }
     )
 
