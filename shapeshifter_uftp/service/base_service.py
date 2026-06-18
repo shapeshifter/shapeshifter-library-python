@@ -164,7 +164,7 @@ class ShapeshifterService():
         logger.info(f"Got a request: {message}")
         # Get the public key that is used to decrypt the message
         signing_key = self.key_lookup_function(
-            message.sender_domain, message.sender_role.value
+            message.sender_domain, message.sender_role
         )
 
         logger.debug(f"The signing key is {signing_key}")

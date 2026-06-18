@@ -1,5 +1,7 @@
 Changelog
 ---------
+- v2.3.2 (2026-06-XX)
+  - Updated dependencies and removed `.value` of StrEnum which didn't work with newer versions of FastAPI
 - v2.2.0 (2026-02-11)
   - Updated dependencies and supported python to version 3.14
 - v2.1.2 (2026-02-10)
