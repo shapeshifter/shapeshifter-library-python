@@ -1,7 +1,11 @@
 Changelog
 ---------
-- v2.3.2 (2026-06-XX)
+- v2.4.0 (2026-06-25)
   - Updated dependencies and removed `.value` of StrEnum which didn't work with newer versions of FastAPI
+- v2.3.2 (2026-05-26)
+  - Implement updated EAN length in Metering
+- v2.3.0 (2026-03-31)
+  - Implemented TestMessage
 - v2.2.0 (2026-02-11)
   - Updated dependencies and supported python to version 3.14
 - v2.1.2 (2026-02-10)
