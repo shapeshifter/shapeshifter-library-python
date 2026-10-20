@@ -6,7 +6,7 @@
 Welcome to Shapeshifter UFTP's documentation!
 =============================================
 
-This library allows you to quickly build applications that talk to Distribution System Operators, Aggregators and Common Reference Operators as defined in the UFTP Specification.
+This library allows you to quickly build applications that talk to Distribution System Operators (DSO), Aggregators (AGR) and Common Reference Operators (CRO) as defined in the UFTP Specification.
 
 .. toctree::
    :maxdepth: 2

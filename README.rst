@@ -39,12 +39,231 @@ If you want to develop shapeshifter-uftp, you can fork or clone this repository 
     $ pytest .
 
 
-Getting Started
----------------
+Running the Shapeshifter Service
+================================
+
+The shapeshifter protocol requires you to run a server that can receive HTTP POST requests. You have the following options.
+
+- If you already have a **FastAPI** application and you'd like to run the Shapeshifter service inside that application, see `Running in FastAPI <#running-in-fastapi>`_.
+
+- If you already have a **Flask** application and you'd like to run the Shapeshifter service inside that, see `Running in Flask <#running-in-flask>`_.
+
+- If you don't have an existing application, or you want to run the Shapeshifter interface stand alone (perhaps inside its own Docker container), see `Running stand-alone <#running-stand-alone>`_. Since the service is implemented as a standard WSGI service, you can choose several web servers like nginx, apache2 or gunicorn, which all support WSGI interfaces.
+
+
+.. _running-in-fastapi:
+
+Running in FastAPI
+------------------
+
+To run the module in FastAPI, you can use the ``.app`` property on your instance of the Shapeshifter service, like so:
+
+.. code-block:: python3
+
+    from fastapi import FastAPI
+    from shapeshifter_uftp.service import ShapeshifterAgrService
+
+
+    class MyShapeshifterService(ShapeshifterAgrService):
+        # Your implementation of the service goes here, see next section
+        ...
+
+
+    # Create an instance of the Shapeshifter Service
+    shapeshifter_service = MyShapeshifterService(..., path="/api/v3/message")
+
+    # Your existing FastAPI application
+    app = FastAPI()
+
+    # Mount the Shapeshifte service inside your existing FastAPI application
+    app.mount("/shapeshifter", shapeshifter_service.app)
+
+    ...
+
+Note that the full path will be the mount point (``/shapeshifter``) plus the ``path`` defined in the MyShapeshifterService consructor (in this case, ``/api/v3/message``).
+
+
+.. _running-in-flask:
+
+Running in Flask
+----------------
+
+To run the module as part of an existing Flask application, wrap your existing application in a ``DispatcherMiddleware`` like so:
+
+.. code-block:: python3
+
+    from flask import Flask, DispatcherMiddleware
+
+    from shapeshifter_uftp.service import ShapeshifterAgrService
+
+
+    class MyShapeshifterService(ShapeshifterAgrService):
+        # Your implementation of the service goes here, see next section
+        ...
+
+    my_app = Flask(__name__)
+
+    shapeshifter_service = MyShapeshifterService(..., path="/api/v3/message")
+
+    app = DispatcherMiddleware(
+        my_app,
+        {"/shapeshifter": shapeshifter_service}
+    )
+
+Note that the full path will be the mount point (``/shapeshifter``) plus the ``path`` defined in the MyShapeshifterService consructor (in this case, ``/api/v3/message``).
+
+
+.. _running-stand-alone:
+
+Running stand-alone
+-------------------
+
+To run the module completely stand-alone, you can use one of these following options.
+
+Standard library wsgiref.simple_server
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This is a build-in function, and you can simply use:
+
+.. code-block:: python3
+
+    from shapeshifter_uftp.service import ShapeshifterAgrService
+
+
+    class MyShapeshifterService(ShapeshifterAgrService):
+        # Your implementation of the service goes here, see next section
+        ...
+
+    service = MyShapeshifterService(...)
+    service.run()
+
+
+You can customize the host, port and path from their defaults of ``'0.0.0.0'`` and ``8080`` and ``/shapeshifter/api/v3/message``. It is recommended that you leave the ``path`` to the default value, as that is the convention for Shapeshifter servers.
+
+
+Using apache httpd
+~~~~~~~~~~~~~~~~~~
+
+You should use ``mod_wsgi``. For a python module like this, stored in the directory ``/app/main.py`` (as would be conventional in, say , a Docker image):
+
+.. code-block:: python3
+
+    # /app/main.py
+
+    from shapeshifter_uftp.service import ShapeshifterAgrService
+
+    class MyShapeshifterService(ShapeshifterAgrService):
+        # Your implementation of the service goes here, see next section
+        ...
+
+    # Create an instance of your Shapeshifter service.
+    # This instance itself is also a WSGI-compatible callable.
+    service = MyShapeshifterService(..., path="/api/v3/message")
+
+You would point the apache2 webserver to it like so:
+
+.. code-block:: apacheconf
+
+    <VirtualHost *:80>
+
+        ServerName www.example.com
+
+        WSGIPythonHome /app/.venv/bin/python
+        WSGIScriptAlias /shapeshifter /app/main.py
+        WSGICallableObject service
+
+        <Directory /app>
+            Require all granted
+        </Directory>
+
+    </VirtualHost>
+
+The directive ``WSGIPythonHome`` sets the location of the python interpreter to use. In this example, a uv-like ``venv`` is assumed.
+
+The directive ``WSGIScriptAlias`` takes two arguments:
+
+- The mount path (``/shapeshifter``)
+- The location of the python module containing the wsgi callable (``/app/main.py``)
+
+The directive ``WSGICallableObject`` takes one argument:
+
+- The name of the callable object. In the case of Shapeshifter-UFTP, this is the name you gave to your instance of your service subclass.
+
+You may need to enable ``mod_wsgi`` using ``a2enmod wsgi`` or other methods.
+
+If you are running apache exposed to the internet directly (and not in a Docker image behind some other infrastructure), you should use HTTPS on port 443, using the ``SSLEngine`` directives.
+
+
+Using gunicorn
+~~~~~~~~~~~~~~
+
+A simple Python webserver that uses WSGI:
+
+
+.. code-block:: python3
+
+    # main.py
+    from shapeshifter_uftp.service import ShapeshifterAgrService
+
+    class MyShapeshifterService(ShapeshifterAgrService):
+        # Your implementation of the service goes here, see next section
+        ...
+
+    # Create an instance of your Shapeshifter service.
+    # This instance itself is also a WSGI-compatible callable.
+    service = MyShapeshifterService(...)
+
+Then run it like so:
+
+.. code-block:: shell
+
+    gunicorn main:service
+
+
+
+Implementing your Shapeshifter Service
+======================================
 
 Shapehifter always requires the use of a Client and a Service, because all responses are asynchronous.
 
-You choose the server class based on your role in the Shapeshifter conversation. If you are an Aggregator (also known as a CSP), you can use this setup:
+You choose the server class based on your role in the Shapeshifter conversation, and subclass the abstract implementation of the appropriate service. You then add implementations for each of the messages that you can receive, in order to post-process them according to you own business logic.
+
+This is an overview of the roles, the base class, and the methods you must implement:
+
+
++------+------------------------+----------------------------------------------------------------------------------------------+
+| Role | Base class             | Methods to implement                                                                         |
++======+========================+==============================================================================================+
+| AGR  | ShapeshifterAgrService | * ``process_d_prognosis_response(self, message: DPrognosisResponse)``                        |
+|      |                        | * ``process_flex_request(self, message: FlexRequest)``                                       |
+|      |                        | * ``process_flex_offer_response(self, message: FlexOfferResponse)``                          |
+|      |                        | * ``process_flex_offer_revocation_response(self, message: FlexOfferRevocationResponse)``     |
+|      |                        | * ``process_flex_order(self, message: FlexOrder)``                                           |
+|      |                        | * ``process_flex_reservation_update(self, message: FlexReservationUpdate)``                  |
+|      |                        | * ``process_flex_settlement(self, message: FlexSettlement)``                                 |
+|      |                        | * ``process_metering_response(self, message: MeteringResponse)``                             |
+|      |                        | * ``process_agr_portfolio_query_response(self, message: AgrPortfolioQueryResponse)``         |
+|      |                        | * ``process_agr_portfolio_update_response(self, message: AgrPortfolioUpdateResponse)``       |
++------+------------------------+----------------------------------------------------------------------------------------------+
+| DSO  | ShapeshifterDsoService | * ``process_d_prognosis(self, message: DPrognosis)``                                         |
+|      |                        | * ``process_flex_request_response(self, message: FlexRequestResponse)``                      |
+|      |                        | * ``process_flex_offer(self, message: FlexOffer)``                                           |
+|      |                        | * ``process_flex_order_response(self, message: FlexOrderResponse)``                          |
+|      |                        | * ``process_flex_offer_revocation(self, message: FlexOfferRevocation)``                      |
+|      |                        | * ``process_flex_reservation_update_response(self, message: FlexReservationUpdateResponse)`` |
+|      |                        | * ``process_flex_settlement_response(self, message: FlexSettlementResponse)``                |
+|      |                        | * ``process_dso_portfolio_query_response(self, message: DsoPortfolioQueryResponse)``         |
+|      |                        | * ``process_dso_portfolio_update_response(self, message: DsoPortfolioUpdateResponse)``       |
+|      |                        | * ``process_metering(self, message: Metering)``                                              |
++------+------------------------+----------------------------------------------------------------------------------------------+
+| CRO  | ShapshifterCroService  | * ``process_agr_portfolio_query(self, message: AgrPortfolioQuery)``                          |
+|      |                        | * ``process_agr_portfolio_update(self, message: AgrPortfolioUpdate)``                        |
+|      |                        | * ``process_dso_portfolio_query(self, message: DsoPortfolioQuery)``                          |
+|      |                        | * ``process_dso_portfolio_update(self, message: DsoPortfolioQuery)``                         |
++------+------------------------+----------------------------------------------------------------------------------------------+
+
+
+If you are an Aggregator (also known as a CSP), you can use this setup:
 
 .. code-block:: python3
 

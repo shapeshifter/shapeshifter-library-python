@@ -1,5 +1,7 @@
 Changelog
 ---------
+- v3.0.0 (2025-10-18)
+  - Removed FastAPI dependency and moved to a standard WSGI interface model
 - v2.4.0 (2026-06-25)
   - Updated dependencies and removed `.value` of StrEnum which didn't work with newer versions of FastAPI
 - v2.3.2 (2026-05-26)

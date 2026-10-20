@@ -1,6 +1,6 @@
 [project]
 name = "shapeshifter_uftp"
-version = "3.0.0"
+version = "3.0.0rc1"
 description = "Implementation of the Shapeshifter (UFTP) protocol"
 dependencies = [
     "a2wsgi<2.0",
@@ -29,7 +29,7 @@ dev = [
     "pylint",
     "responses",
     "sphinx",
-    "sphinx-rtd-theme"
+    "sphinx-rtd-theme",
 ]
 
 [build-system]
