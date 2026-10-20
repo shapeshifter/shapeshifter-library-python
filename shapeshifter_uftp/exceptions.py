@@ -15,6 +15,12 @@ Specification. The relevant parts are copied as docstrings for these
 exceptions.
 """
 from abc import ABC
+from enum import IntEnum
+from http import HTTPStatus
+
+
+class ExtendedHTTPStatus(IntEnum):
+    AUTHENTICATION_TIMEOUT = 419
 
 
 class TransportException(Exception, ABC):
@@ -22,7 +28,7 @@ class TransportException(Exception, ABC):
     Base TransportException class that is used by FastApi to return
     the approprate status code.
     """
-    http_status_code: int
+    http_status_code: HTTPStatus
 
 
 class MissingContentLengthException(TransportException):
@@ -30,7 +36,7 @@ class MissingContentLengthException(TransportException):
     Thrown when the content-length is missing from the message headers.
     """
 
-    http_status_code = 411
+    http_status_code = HTTPStatus(411)
 
 
 class InvalidContentTypeException(TransportException):
@@ -39,7 +45,7 @@ class InvalidContentTypeException(TransportException):
     character set is not utf-8.
     """
 
-    http_status_code = 400
+    http_status_code = HTTPStatus(400)
 
 
 class TooManyRequestsException(TransportException):
@@ -48,7 +54,7 @@ class TooManyRequestsException(TransportException):
     to the service.
     """
 
-    http_status_code = 429
+    http_status_code = HTTPStatus(429)
 
 
 class SchemaException(TransportException):
@@ -57,7 +63,7 @@ class SchemaException(TransportException):
     the schema.
     """
 
-    http_status_code = 400
+    http_status_code = HTTPStatus(400)
 
 
 class AuthenticationTimeoutException(TransportException):
@@ -66,7 +72,7 @@ class AuthenticationTimeoutException(TransportException):
     DNS.
     """
 
-    http_status_code = 419
+    http_status_code = ExtendedHTTPStatus(419)
 
 
 class InvalidSignatureException(TransportException):
@@ -75,7 +81,7 @@ class InvalidSignatureException(TransportException):
     invalid signature.
     """
 
-    http_status_code = 401
+    http_status_code = HTTPStatus(401)
 
 
 class FunctionalException(ABC, Exception):

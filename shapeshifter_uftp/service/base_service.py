@@ -1,12 +1,8 @@
 import re
 from concurrent.futures import ThreadPoolExecutor
+from http import HTTPStatus
 from threading import Thread
 from time import sleep
-
-import uvicorn
-from fastapi import FastAPI, Response
-from fastapi.exceptions import HTTPException
-from fastapi_xml import XmlAppResponse, XmlRoute
 
 from .. import transport
 from ..client import client_map
@@ -69,6 +65,10 @@ class ShapeshifterService():
         :param host: the host to bind the server to (usually 127.0.0.1 or 0.0.0.0)
         :param port: the port to bind the server to (default: 8080)
         :param path: the URL path that the server listens on (default: /shapeshifter/api/v3/message)
+                     if you are mounting this as a sub-application, be aware that the mount point should
+                     not be included in this string. For example, if you mount it under "/shapeshifter", you
+                     should override this parameter to read "/api/v3/message" to prevent the "/shapeshifter"
+                     being duplicated.
         """
 
         if version not in ("3.0.0", "3.1.0"):
@@ -98,24 +98,11 @@ class ShapeshifterService():
         # used to authenticate outgoing requests.
         self.oauth_lookup_function = oauth_lookup_function
 
-        # The FastAPI web app takes care of routing messages to the
-        # (one) endpoint, and by virtue of FastAPI-XML convert the
-        # python-friendly objects into XML and vice versa.
-        self.app = FastAPI(default_response_class=XmlAppResponse)
-        self.app.router.route_class = XmlRoute
-        self.app.router.add_api_route(
-            path,
-            endpoint=self._receive_message,
-            response_model=None,
-            methods=["POST"],
-            status_code=200,
-        )
-
-        # The web server hosts the FastAPI application and takes care
-        # of the HTTP transport.
-        config = uvicorn.Config(app=self.app, host=host, port=port)
-        self.server = uvicorn.Server(config)
-        self.server_thread = None
+        # Store information to run a stand-alone server, if needed
+        self.host = host
+        self.port = port
+        self.path = path
+        self.server = None
 
         # Create an inbound executor worker
         self.inbound_executor = ThreadPoolExecutor(max_workers=self.num_inbound_threads)
@@ -128,25 +115,41 @@ class ShapeshifterService():
         participants can now send messages to us.
         """
         # Start the service and start accepting incoming requests.
-        self.server.run()
+        from wsgiref.simple_server import make_server
+        self.server = make_server(self.host, self.port, self)
+        self.server.serve_forever()
 
     def run_in_thread(self):
         """
         Run the service in a background thread.
         """
         self.server_thread = Thread(target=self.run)
+        self.server_thread_daemon = True
         self.server_thread.start()
-        while not self.server.started:
+
+        while not self.server:
             sleep(0.1)
 
     def stop(self):
         """
         Stop the service if it was running in a separate thread.
         """
-        self.server.should_exit = True
+        if self.server is not None:
+            self.server.shutdown()
+            self.server.server_close()
         if self.server_thread and self.server_thread.is_alive():
             self.server_thread.join()
         self.server_thread = None
+
+    @property
+    def app(self):
+        """
+        A FastAPI-compatible ASGI app to mount in an existing application.
+        """
+
+        from a2wsgi import WSGIMiddleware
+
+        return WSGIMiddleware(self)
 
 
     # ------------------------------------------------------------ #
@@ -154,13 +157,27 @@ class ShapeshifterService():
     #              Shapeshifter UFTP implementation.               #
     # ------------------------------------------------------------ #
 
-    def _receive_message(self, message: SignedMessage) -> Response:
+    def __call__(self, environ, start_response):
         """
+        A WSGI compatible handler for the shapeshifter endpoint.
+
+        This endpoint is framework-independent and can be used with any WSGI server,
+        or using a ASGI to WSGI adapter, with any ASGI framework (like FastAPI).
+
         The default entrypoint for the route. This will unpack the
         message and validate the signature. It will thes pass the
         PayloadMessago to the pre processing function for a
         response.
         """
+        if not environ["PATH_INFO"] == self.path:
+            status = HTTPStatus(404)
+            start_response("404 Not Found", [])
+            return [b""]
+
+        content_length = int(environ.get('CONTENT_LENGTH', 0))
+        message_bytes = environ["wsgi.input"].read(content_length)
+        message = transport.parser.from_bytes(message_bytes, SignedMessage)
+
         logger.info(f"Got a request: {message}")
         # Get the public key that is used to decrypt the message
         signing_key = self.key_lookup_function(
@@ -192,17 +209,20 @@ class ShapeshifterService():
 
         except TransportException as err:
             logger.warning(f"The original transport error is {err.__class__.__name__}: {err}")
-            raise HTTPException(err.http_status_code) from err
+            start_response(f"{err.http_status_code} {err.http_status_code.name.replace("_", " ").title()}", [])
 
         except FunctionalException as err:
             self.outbound_executor.submit(self._reject_message, message, unsealed_message, err.rejection_reason)
+            start_response("200 OK", [])
 
         else:
             # If the initial checks passed, process the message in the
             # user-defined pipeline.
             self.inbound_executor.submit(self._process_message, unsealed_message, message.sender_role)
+            start_response("200 OK", [])
 
-        return Response(status_code=200)
+        return [b""]
+
 
     def _process_message(self, message: PayloadMessage, sender_role: UsefRole):
         """
