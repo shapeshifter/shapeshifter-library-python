@@ -1,5 +1,8 @@
 Changelog
 ---------
+- v2.5.0 (2026-11-12)
+  - Added option to specify an OAuth scope
+  - Upgraded dnspython dependency version
 - v2.4.0 (2026-06-25)
   - Updated dependencies and removed `.value` of StrEnum which didn't work with newer versions of FastAPI
 - v2.3.2 (2026-05-26)
