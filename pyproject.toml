@@ -1,6 +1,6 @@
 [project]
 name = "shapeshifter_uftp"
-version = "3.0.0rc1"
+version = "3.0.0rc2"
 description = "Implementation of the Shapeshifter (UFTP) protocol"
 dependencies = [
     "a2wsgi<2.0",
