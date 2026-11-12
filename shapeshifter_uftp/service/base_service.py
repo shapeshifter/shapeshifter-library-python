@@ -1,8 +1,9 @@
 import re
 from concurrent.futures import ThreadPoolExecutor
-from http import HTTPStatus
 from threading import Thread
 from time import sleep
+
+import xsdata.exceptions
 
 from .. import transport
 from ..client import client_map
@@ -169,14 +170,26 @@ class ShapeshifterService():
         PayloadMessago to the pre processing function for a
         response.
         """
+
+        if environ["REQUEST_METHOD"] != "POST":
+            start_response("405 Method Not Allowed", [])
+            return [b""]
+
         if not environ["PATH_INFO"] == self.path:
-            status = HTTPStatus(404)
             start_response("404 Not Found", [])
             return [b""]
 
+        if not environ["CONTENT_TYPE"].startswith("text/xml"):
+            start_response("422 Unprocessable Content", [])
+            return [b"Content-Type must be text/xml"]
+
         content_length = int(environ.get('CONTENT_LENGTH', 0))
         message_bytes = environ["wsgi.input"].read(content_length)
-        message = transport.parser.from_bytes(message_bytes, SignedMessage)
+        try:
+            message = transport.parser.from_bytes(message_bytes, SignedMessage)
+        except xsdata.exceptions.ParserError:
+            start_response("422 Unprocessable Content", [])
+            return [b""]
 
         logger.info(f"Got a request: {message}")
         # Get the public key that is used to decrypt the message
@@ -222,7 +235,6 @@ class ShapeshifterService():
             start_response("200 OK", [])
 
         return [b""]
-
 
     def _process_message(self, message: PayloadMessage, sender_role: UsefRole):
         """

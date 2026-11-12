@@ -49,8 +49,7 @@ def test_sender_mismatch():
 
 def test_transport_error():
     """
-    Send a message with mismatching sender_domain in the outer
-    envelope and the inner PayloadMessage.
+    Send an XML message that cannot be found.
     """
     with DummyCroService() as cro_service:
         agr_service = DummyAgrService()
@@ -69,3 +68,47 @@ def test_transport_error():
             )
 
             assert response.status_code == 400
+
+
+def test_transport_error_wrong_content_type():
+    """
+    Send a message with non-xml content
+    """
+    with DummyCroService() as cro_service:
+        agr_service = DummyAgrService()
+        with agr_service.cro_client(cro_service.sender_domain) as client:
+            message = b''
+            response = requests.post(
+                client.recipient_endpoint,
+                headers={"Content-Type": "application/json"},
+                json={"hello": "world"}
+            )
+
+            assert response.status_code == 422
+
+
+def test_transport_error_non_xml():
+    """
+    Send a message with non-xml content
+    """
+    with DummyCroService() as cro_service:
+        agr_service = DummyAgrService()
+        with agr_service.cro_client(cro_service.sender_domain) as client:
+            message = b''
+            response = requests.post(
+                client.recipient_endpoint,
+                headers={"Content-Type": "text/xml"},
+                data=b'non xml data'
+            )
+
+            assert response.status_code == 422
+
+def test_transport_error_wrong_method():
+    """
+    Send a request with the wrong HTTP method.
+    """
+    with DummyCroService() as cro_service:
+        agr_service = DummyAgrService()
+        with agr_service.cro_client(cro_service.sender_domain) as client:
+            response = requests.get(client.recipient_endpoint)
+            assert response.status_code == 405
