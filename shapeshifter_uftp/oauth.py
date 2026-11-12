@@ -9,10 +9,11 @@ class OAuthClient:
 
     EXPIRATION_SAFETY_BUFFER = 60
 
-    def __init__(self, url, client_id, client_secret):
+    def __init__(self, url: str, client_id: str, client_secret: str, scope: str | None = None):
         self.url = url
         self.client_id = client_id
         self.client_secret = client_secret
+        self.scope = scope
         self.access_token = None
         self.access_token_type = None
         self.access_token_expiry = None
@@ -36,12 +37,18 @@ class OAuthClient:
         return {"Authorization": f"{self.access_token_type} {self.access_token}"}
 
     def authenticate(self):
+        if self.scope:
+            scope = {"scope": self.scope}
+        else:
+            scope = {}
+
         response = requests.post(
             self.url,
             data={
                 "grant_type": "client_credentials",
                 "client_id": self.client_id,
                 "client_secret": self.client_secret,
+                **scope
             },
             timeout=30
         )
