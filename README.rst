@@ -164,11 +164,13 @@ You would point the apache2 webserver to it like so:
 
 .. code-block:: apacheconf
 
+    # sites-available/www.example.com.conf
+    WSGIPythonHome /app/.venv
+
     <VirtualHost *:80>
 
         ServerName www.example.com
 
-        WSGIPythonHome /app/.venv/bin/python
         WSGIScriptAlias /shapeshifter /app/main.py
         WSGICallableObject service
 
@@ -190,6 +192,13 @@ The directive ``WSGICallableObject`` takes one argument:
 - The name of the callable object. In the case of Shapeshifter-UFTP, this is the name you gave to your instance of your service subclass.
 
 You may need to enable ``mod_wsgi`` using ``a2enmod wsgi`` or other methods.
+
+You should use the same Python version in your venv that mod_wsgi was compiled for. This is usually the system python version:
+
+.. code-block:: bash
+
+    uv venv --python=$(python3 --version | grep -oE "3.[0-9.]+")
+
 
 If you are running apache exposed to the internet directly (and not in a Docker image behind some other infrastructure), you should use HTTPS on port 443, using the ``SSLEngine`` directives.
 
